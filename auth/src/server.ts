@@ -1,7 +1,8 @@
 import bodyParser from 'body-parser';
 import './util/module-alias';
 import { Server } from '@overnightjs/core';
-import { AuthController } from './controllers/auth';
+import * as database from '@src/database';
+import { UserController } from './controllers/users';
 import { Application } from 'express';
 
 export class SetupServer extends Server {
@@ -9,9 +10,10 @@ export class SetupServer extends Server {
     super();
   }
 
-  public init(): void {
+  public async init(): Promise<void> {
     this.setupExpress();
     this.setupControllers();
+    await this.setupDatabase();
   }
 
   private setupExpress(): void {
@@ -19,8 +21,16 @@ export class SetupServer extends Server {
   }
 
   private setupControllers(): void {
-    const authController = new AuthController();
-    this.addControllers([authController]);
+    const userController = new UserController();
+    this.addControllers([userController]);
+  }
+
+  private async setupDatabase(): Promise<void> {
+    await database.connect();
+  }
+
+  public async close(): Promise<void> {
+    await database.close();
   }
 
   public getApp(): Application {
