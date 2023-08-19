@@ -2,7 +2,7 @@ import bodyParser from 'body-parser';
 import './util/module-alias';
 import { Server } from '@overnightjs/core';
 import * as database from '@src/database';
-import { UserController } from './controllers/users';
+import { UsersController } from './controllers/users';
 import { Application } from 'express';
 
 export class SetupServer extends Server {
@@ -21,8 +21,8 @@ export class SetupServer extends Server {
   }
 
   private setupControllers(): void {
-    const userController = new UserController();
-    this.addControllers([userController]);
+    const usersController = new UsersController();
+    this.addControllers([usersController]);
   }
 
   private async setupDatabase(): Promise<void> {

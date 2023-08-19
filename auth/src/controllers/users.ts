@@ -1,10 +1,13 @@
-import { Controller, Get } from '@overnightjs/core';
+import { Controller, Post } from '@overnightjs/core';
+import { User } from '@src/models/user';
 import { Request, Response } from 'express';
 
 @Controller('users')
-export class UserController {
-  @Get('')
+export class UsersController {
+  @Post('')
   public async create(req: Request, res: Response) {
-    res.status(200).send(['teste']);
+    const user = new User(req.body);
+    const newUser = await user.save();
+    res.status(201).send(newUser);
   }
 }
