@@ -31,6 +31,54 @@ describe('users functional tests', () => {
       );
     });
 
+    /**
+     * ajustar mais adiante para realizar o teste do login com o google
+     */
+    it('should sucessfully a create new user with image', async () => {
+      const newUser = {
+        userName: 'Elon Musk',
+        userEmail: 'elonMusk@mail.com',
+        userPassword: '1234',
+        userImage:
+          'https://lh3.googleusercontent.com/a/AATXAJx9PKJ1hc02Vq927bNpMk0UKFwkbncy_bJLvh_i=s100',
+      };
+
+      const response = await global.testRequest.post('/users').send(newUser);
+      expect(response.status).toBe(201);
+
+      await expect(
+        AuthService.comparePassword(
+          newUser.userPassword,
+          response.body.userPassword
+        )
+      ).resolves.toBeTruthy();
+
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          ...newUser,
+          ...{ userPassword: expect.any(String) },
+        })
+      );
+    });
+
+    it('should return 422 when create a user with invalid image url', async () => {
+      const newUser = {
+        userName: 'Elon Musk',
+        userEmail: 'elonMusk@mail.com',
+        userPassword: '1234',
+        userImage: 'invalidImage',
+      };
+
+      const response = await global.testRequest.post('/users').send(newUser);
+
+      expect(response.status).toBe(422);
+
+      expect(response.body).toEqual({
+        code: 422,
+        error: 'User validation failed: userImage: Invalid URL',
+      });
+    });
+
     it('should return 422 when there is validation error', async () => {
       const newUser = {
         userEmail: 'elonMusk@mail.com',

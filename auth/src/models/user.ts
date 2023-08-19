@@ -1,5 +1,6 @@
 import mongoose, { Document } from 'mongoose';
 import { AuthService } from '@src/services/auth';
+import { Helpers } from '@src/util/helpers';
 
 export interface User {
   _id?: string;
@@ -24,7 +25,16 @@ const schema = new mongoose.Schema(
       unique: true,
     },
     userPassword: { type: String, required: true },
-    userImage: { type: String, required: false },
+    userImage: {
+      type: String,
+      required: false,
+      validate: {
+        validator: (value: string) => {
+          return !value || Helpers.isValidUrl(value);
+        },
+        message: 'Invalid URL',
+      },
+    },
   },
   {
     toJSON: {
@@ -49,6 +59,10 @@ schema.path('userEmail').validate(
 schema.pre<UserModel>('save', async function (): Promise<void> {
   if (!this.userPassword || !this.isModified('userPassword')) {
     return;
+  }
+
+  if (!this.userImage) {
+    this.userImage = '';
   }
 
   try {
