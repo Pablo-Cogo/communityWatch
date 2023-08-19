@@ -7,7 +7,7 @@ describe('users functional tests', () => {
   });
   describe('when creating a new user', () => {
     it('should sucessfully a create new user with encrypted password', async () => {
-      const newUser: User = {
+      const newUser = {
         userName: 'Elon Musk',
         userEmail: 'elonMusk@mail.com',
         userPassword: '1234',
@@ -47,7 +47,7 @@ describe('users functional tests', () => {
     });
 
     it('should return 409 when email already exists', async () => {
-      const newUser: User = {
+      const newUser = {
         userName: 'Elon Musk',
         userEmail: 'elonMusk@mail.com',
         userPassword: '1234',
@@ -60,6 +60,55 @@ describe('users functional tests', () => {
         error:
           'User validation failed: userEmail: already exists in the database.',
       });
+    });
+  });
+
+  describe('when authenticating a user', () => {
+    it('should generate a token for a valid user', async () => {
+      const newUser = {
+        userName: 'Elon Musk',
+        userEmail: 'elonMusk@mail.com',
+        userPassword: '1234',
+      };
+      await new User(newUser).save();
+      const response = await global.testRequest
+        .post('/users/authenticate')
+        .send({
+          userEmail: newUser.userEmail,
+          userPassword: newUser.userPassword,
+        });
+
+      expect(response.body).toEqual(
+        expect.objectContaining({ token: expect.any(String) })
+      );
+    });
+
+    it('should return `401 - Unauthorized` if user try sign in with invalid email', async () => {
+      const response = await global.testRequest
+        .post('/users/authenticate')
+        .send({
+          userEmail: 'elonMuskJr@mail.com',
+          userPassword: '1234',
+        });
+
+      expect(response.status).toBe(401);
+    });
+
+    it('should return `401 - Unauthorized` if user try sign in with invalid password', async () => {
+      const newUser = {
+        userName: 'Elon Musk',
+        userEmail: 'elonMusk@mail.com',
+        userPassword: '1234',
+      };
+      await new User(newUser).save();
+      const response = await global.testRequest
+        .post('/users/authenticate')
+        .send({
+          userEmail: newUser.userEmail,
+          userPassword: '01234',
+        });
+
+      expect(response.status).toBe(401);
     });
   });
 });
