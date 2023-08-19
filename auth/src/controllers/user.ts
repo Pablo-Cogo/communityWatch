@@ -2,10 +2,10 @@ import { Controller, Post } from '@overnightjs/core';
 import { User } from '@src/models/user';
 import { Request, Response } from 'express';
 import { BaseController } from '.';
-import { AuthService } from '@src/services/auth';
+import AuthService from '@src/services/auth';
 
-@Controller('users')
-export class UsersController extends BaseController {
+@Controller('user')
+export class UserController extends BaseController {
   @Post('')
   public async create(req: Request, res: Response): Promise<void> {
     try {
@@ -28,7 +28,9 @@ export class UsersController extends BaseController {
       return;
     }
 
-    if (!(await AuthService.comparePassword(userPassword, user.userPassword))) {
+    if (
+      !(await AuthService.comparePasswords(userPassword, user.userPassword))
+    ) {
       res.status(401).send({
         code: 401,
         error: 'User not found',
@@ -36,7 +38,7 @@ export class UsersController extends BaseController {
       return;
     }
 
-    const token = AuthService.genetateToken(user.toJSON());
+    const token = AuthService.generateToken(user.id);
     res.status(200).send({ token });
   }
 }

@@ -1,8 +1,12 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import config from 'config';
+import jwt from 'jsonwebtoken';
 
-export class AuthService {
+export interface JwtToken {
+  sub: string;
+}
+
+export default class AuthService {
   public static async hashPassword(
     password: string,
     salt = 10
@@ -10,16 +14,20 @@ export class AuthService {
     return await bcrypt.hash(password, salt);
   }
 
-  public static async comparePassword(
+  public static async comparePasswords(
     password: string,
     hashedPassword: string
   ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
   }
 
-  public static genetateToken(payload: object): string {
-    return jwt.sign(payload, config.get<string>('App.auth.key'), {
-      expiresIn: config.get<string>('App.auth.tokenExpiresIn'),
+  public static generateToken(sub: string): string {
+    return jwt.sign({ sub }, config.get<string>('App.auth.key'), {
+      expiresIn: config.get('App.auth.tokenExpiresIn'),
     });
+  }
+
+  public static decodeToken(token: string): JwtToken {
+    return jwt.verify(token, config.get('App.auth.key')) as JwtToken;
   }
 }

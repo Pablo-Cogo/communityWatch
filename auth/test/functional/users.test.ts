@@ -1,5 +1,5 @@
 import { User } from '@src/models/user';
-import { AuthService } from '@src/services/auth';
+import AuthService from '@src/services/auth';
 
 describe('users functional tests', () => {
   beforeEach(async () => {
@@ -13,11 +13,11 @@ describe('users functional tests', () => {
         userPassword: '1234',
       };
 
-      const response = await global.testRequest.post('/users').send(newUser);
+      const response = await global.testRequest.post('/user').send(newUser);
       expect(response.status).toBe(201);
 
       await expect(
-        AuthService.comparePassword(
+        AuthService.comparePasswords(
           newUser.userPassword,
           response.body.userPassword
         )
@@ -43,11 +43,11 @@ describe('users functional tests', () => {
           'https://lh3.googleusercontent.com/a/AATXAJx9PKJ1hc02Vq927bNpMk0UKFwkbncy_bJLvh_i=s100',
       };
 
-      const response = await global.testRequest.post('/users').send(newUser);
+      const response = await global.testRequest.post('/user').send(newUser);
       expect(response.status).toBe(201);
 
       await expect(
-        AuthService.comparePassword(
+        AuthService.comparePasswords(
           newUser.userPassword,
           response.body.userPassword
         )
@@ -69,7 +69,7 @@ describe('users functional tests', () => {
         userImage: 'invalidImage',
       };
 
-      const response = await global.testRequest.post('/users').send(newUser);
+      const response = await global.testRequest.post('/user').send(newUser);
 
       expect(response.status).toBe(422);
 
@@ -85,7 +85,7 @@ describe('users functional tests', () => {
         userPassword: '1234',
       };
 
-      const response = await global.testRequest.post('/users').send(newUser);
+      const response = await global.testRequest.post('/user').send(newUser);
 
       expect(response.status).toBe(422);
       expect(response.body).toEqual({
@@ -100,8 +100,8 @@ describe('users functional tests', () => {
         userEmail: 'elonMusk@mail.com',
         userPassword: '1234',
       };
-      await global.testRequest.post('/users').send(newUser);
-      const response = await global.testRequest.post('/users').send(newUser);
+      await global.testRequest.post('/user').send(newUser);
+      const response = await global.testRequest.post('/user').send(newUser);
       expect(response.status).toBe(409);
       expect(response.body).toEqual({
         code: 409,
@@ -120,7 +120,7 @@ describe('users functional tests', () => {
       };
       await new User(newUser).save();
       const response = await global.testRequest
-        .post('/users/authenticate')
+        .post('/user/authenticate')
         .send({
           userEmail: newUser.userEmail,
           userPassword: newUser.userPassword,
@@ -133,7 +133,7 @@ describe('users functional tests', () => {
 
     it('should return `401 - Unauthorized` if user try sign in with invalid email', async () => {
       const response = await global.testRequest
-        .post('/users/authenticate')
+        .post('/user/authenticate')
         .send({
           userEmail: 'elonMuskJr@mail.com',
           userPassword: '1234',
@@ -150,7 +150,7 @@ describe('users functional tests', () => {
       };
       await new User(newUser).save();
       const response = await global.testRequest
-        .post('/users/authenticate')
+        .post('/user/authenticate')
         .send({
           userEmail: newUser.userEmail,
           userPassword: '01234',

@@ -1,6 +1,7 @@
 import mongoose, { Document } from 'mongoose';
-import { AuthService } from '@src/services/auth';
-import { Helpers } from '@src/util/helpers';
+import { CUSTOM_VALIDATION } from '.';
+import AuthService from '@src/services/auth';
+import Helpers from '@src/util/helpers';
 
 export interface User {
   _id?: string;
@@ -10,21 +11,18 @@ export interface User {
   userImage?: string;
 }
 
-export enum CUSTOM_VALIDATION {
-  DUPLICATED = 'DUPLICATED',
-}
-
 interface UserModel extends Omit<User, '_id'>, Document {}
 
 const schema = new mongoose.Schema(
   {
-    userName: { type: String, required: true },
+    userName: { type: String, required: true, maxlength: 50 },
     userEmail: {
       type: String,
       required: true,
       unique: true,
+      maxlength: 254,
     },
-    userPassword: { type: String, required: true },
+    userPassword: { type: String, required: true, maxlength: 60 },
     userImage: {
       type: String,
       required: false,
@@ -34,6 +32,7 @@ const schema = new mongoose.Schema(
         },
         message: 'Invalid URL',
       },
+      maxlength: 254,
     },
   },
   {

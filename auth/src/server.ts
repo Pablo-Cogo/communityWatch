@@ -2,8 +2,9 @@ import bodyParser from 'body-parser';
 import './util/module-alias';
 import { Server } from '@overnightjs/core';
 import * as database from '@src/database';
-import { UsersController } from './controllers/users';
+import { UserController } from './controllers/user';
 import { Application } from 'express';
+import { PersonController } from './controllers/person';
 
 export class SetupServer extends Server {
   constructor(private port = 3000) {
@@ -21,8 +22,9 @@ export class SetupServer extends Server {
   }
 
   private setupControllers(): void {
-    const usersController = new UsersController();
-    this.addControllers([usersController]);
+    const userController = new UserController();
+    const personController = new PersonController();
+    this.addControllers([userController, personController]);
   }
 
   private async setupDatabase(): Promise<void> {
