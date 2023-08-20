@@ -10,17 +10,12 @@ import Helpers from '@src/util/helpers';
 export class PersonController extends BaseController {
   @Post('')
   public async create(req: Request, res: Response): Promise<void> {
-    const { personFullName, personBirth } = req.body;
-    let { personCPF, personPhone } = req.body;
     try {
-      personCPF = Helpers.onlyNumbers(personCPF);
-      personPhone = Helpers.onlyNumbers(personPhone);
       const person = new Person({
-        personFullName,
-        personBirth,
-        personCPF,
-        personPhone,
-        userId: req.context?.userId,
+        ...req.body,
+        ...{ personCPF: Helpers.onlyNumbers(req.body.personCPF) },
+        ...{ personPhone: Helpers.onlyNumbers(req.body.personPhone) },
+        ...{ userId: req.context?.userId },
       });
       const newPerson = await person.save();
       res.status(201).send(newPerson);

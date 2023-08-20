@@ -9,6 +9,7 @@ export interface Person {
   personBirth: Date;
   personPhone?: string;
   userId: string;
+  addressId: string;
 }
 
 interface PersonModel extends Omit<Person, '_id'>, Document {}
@@ -29,16 +30,17 @@ const schema = new mongoose.Schema(
       },
     },
     personBirth: { type: Date, required: true },
-    personPhone: {
-      type: String,
-      required: false,
-      maxlength: 11,
-    },
+    personPhone: { type: String, required: false, maxlength: 11 },
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
       unique: true,
+    },
+    addressId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Address',
+      required: false,
     },
   },
   {
@@ -65,6 +67,7 @@ schema.pre<PersonModel>('save', async function (): Promise<void> {
   this.personCPF = Helpers.onlyNumbers(this.personCPF);
   if (this.personPhone)
     this.personPhone = Helpers.onlyNumbers(this.personPhone);
+  else this.personPhone = '';
 });
 
 schema.path('userId').validate(
