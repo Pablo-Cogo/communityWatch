@@ -1,9 +1,11 @@
+import { userRole } from '@src/models/user';
 import bcrypt from 'bcrypt';
 import config from 'config';
 import jwt from 'jsonwebtoken';
 
 export interface JwtToken {
   sub: string;
+  role: userRole;
 }
 
 export default class AuthService {
@@ -21,8 +23,10 @@ export default class AuthService {
     return await bcrypt.compare(password, hashedPassword);
   }
 
-  public static generateToken(sub: string): string {
-    return jwt.sign({ sub }, config.get<string>('App.auth.key'), {
+  public static checkRoleUser() {}
+
+  public static generateToken(sub: string, role: userRole): string {
+    return jwt.sign({ sub, role }, config.get<string>('App.auth.key'), {
       expiresIn: config.get('App.auth.tokenExpiresIn'),
     });
   }

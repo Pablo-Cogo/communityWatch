@@ -1,9 +1,10 @@
 import AuthService from '@src/services/auth';
 import { authMiddleware } from '../auth';
+import { userRole } from '@src/models/user';
 
 describe('AuthMiddleware', () => {
   it('should verify JWT token and call next middleware', () => {
-    const jwtToken = AuthService.generateToken('fake-user-id');
+    const jwtToken = AuthService.generateToken('fake-user-id', userRole.user);
     const reqFake = {
       headers: {
         'x-access-token': jwtToken,

@@ -21,7 +21,7 @@ describe('address functional tests', () => {
     await User.deleteMany();
     await Person.deleteMany();
     const user = await new User(defaultUser).save();
-    token = AuthService.generateToken(user.id);
+    token = AuthService.generateToken(user.id, user.userRole);
     await new Person({ ...defaultPerson, ...{ userId: user.id } }).save();
   });
   describe('when creating a new address', () => {

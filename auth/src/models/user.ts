@@ -3,11 +3,18 @@ import { CUSTOM_VALIDATION } from '.';
 import AuthService from '@src/services/auth';
 import HelperService from '@src/services/helpers';
 
+export enum userRole {
+  admin = 0,
+  employee = 1,
+  user = 2,
+}
+
 export interface User {
   _id?: string;
   userName: string;
   userEmail: string;
   userPassword: string;
+  userRole: userRole;
   userImage?: string;
 }
 
@@ -23,6 +30,12 @@ const schema = new mongoose.Schema(
       maxlength: 254,
     },
     userPassword: { type: String, required: true, maxlength: 60 },
+    userRole: {
+      type: Number,
+      enum: userRole,
+      required: true,
+      default: 2,
+    },
     userImage: {
       type: String,
       required: false,
@@ -55,7 +68,7 @@ schema.path('userEmail').validate(
   CUSTOM_VALIDATION.DUPLICATED
 );
 
-schema.pre<UserModel>('save', async function (): Promise<void> {
+schema.pre<User & Document>('save', async function (): Promise<void> {
   if (!this.userPassword || !this.isModified('userPassword')) {
     return;
   }

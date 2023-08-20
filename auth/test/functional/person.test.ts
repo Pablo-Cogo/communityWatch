@@ -13,7 +13,7 @@ describe('person functional tests', () => {
     await Person.deleteMany();
     await User.deleteMany();
     const user = await new User(defaultUser).save();
-    token = AuthService.generateToken(user.id);
+    token = AuthService.generateToken(user.id, user.userRole);
   });
   describe('when creating a new person', () => {
     it('should sucessfully a create new Person', async () => {
