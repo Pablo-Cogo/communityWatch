@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { CUSTOM_VALIDATION } from '.';
-import Helpers from '@src/util/helpers';
+import HelperService from '@src/services/helpers';
 
 export interface Person {
   _id?: string;
@@ -16,7 +16,21 @@ interface PersonModel extends Omit<Person, '_id'>, Document {}
 
 const schema = new mongoose.Schema(
   {
-    personFullName: { type: String, required: true, maxlength: 60 },
+    personFullName: {
+      type: String,
+      required: true,
+      minlenght: 3,
+      maxlength: 60,
+      validate: {
+        validator: (value: string) => {
+          return (
+            HelperService.containsOnlyLetters(value) &&
+            !HelperService.hasFourConsecutiveSameChars(value)
+          );
+        },
+        message: 'Invalid Full Name',
+      },
+    },
     personCPF: {
       type: String,
       required: true,
@@ -24,7 +38,7 @@ const schema = new mongoose.Schema(
       maxlength: 11,
       validate: {
         validator: (value: string) => {
-          return Helpers.isValidateCPF(value);
+          return HelperService.isValidateCPF(value);
         },
         message: 'Invalid CPF',
       },
@@ -64,9 +78,9 @@ schema.path('personCPF').validate(
 );
 
 schema.pre<PersonModel>('save', async function (): Promise<void> {
-  this.personCPF = Helpers.onlyNumbers(this.personCPF);
+  this.personCPF = HelperService.onlyNumbers(this.personCPF);
   if (this.personPhone)
-    this.personPhone = Helpers.onlyNumbers(this.personPhone);
+    this.personPhone = HelperService.onlyNumbers(this.personPhone);
   else this.personPhone = '';
 });
 

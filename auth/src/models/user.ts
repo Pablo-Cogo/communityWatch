@@ -1,7 +1,7 @@
 import mongoose, { Document } from 'mongoose';
 import { CUSTOM_VALIDATION } from '.';
 import AuthService from '@src/services/auth';
-import Helpers from '@src/util/helpers';
+import HelperService from '@src/services/helpers';
 
 export interface User {
   _id?: string;
@@ -28,7 +28,7 @@ const schema = new mongoose.Schema(
       required: false,
       validate: {
         validator: (value: string) => {
-          return !value || Helpers.isValidUrl(value);
+          return !value || HelperService.isValidUrl(value);
         },
         message: 'Invalid URL',
       },

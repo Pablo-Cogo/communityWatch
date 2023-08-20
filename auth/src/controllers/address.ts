@@ -3,8 +3,8 @@ import { Request, Response } from 'express';
 import { BaseController } from '.';
 import { authMiddleware } from '@src/middlewares/auth';
 import { Address } from '@src/models/address';
-import Helpers from '@src/util/helpers';
 import { Person } from '@src/models/person';
+import HelperService from '@src/services/helpers';
 
 /**
  * TODO
@@ -19,7 +19,9 @@ export class AddressController extends BaseController {
     try {
       const address = new Address({
         ...req.body,
-        ...{ addressZipCode: Helpers.onlyNumbers(req.body.addressZipCode) },
+        ...{
+          addressZipCode: HelperService.onlyNumbers(req.body.addressZipCode),
+        },
       });
 
       const person = await Person.findOneAndUpdate(

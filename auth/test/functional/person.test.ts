@@ -36,8 +36,74 @@ describe('person functional tests', () => {
         .set({ 'x-access-token': token })
         .send(newPerson);
 
-      // expect(response.status).toBe(201);
+      expect(response.status).toBe(201);
       expect(response.body).toEqual(expect.objectContaining(expectResponse));
+    });
+
+    it('should return 422 when there is validation error', async () => {
+      const newPerson = {
+        personCPF: '456.734.470-78',
+        personBirth: '1971-06-28',
+        personPhone: '1 800 613 8840',
+      };
+
+      const response = await global.testRequest
+        .post('/person')
+        .set({ 'x-access-token': token })
+        .send(newPerson);
+
+      expect(response.status).toBe(422);
+      expect(response.body).toEqual({
+        code: 422,
+        error:
+          'Person validation failed: personFullName: Path `personFullName` is required.',
+      });
+    });
+
+    it('should return 422 when cpf is invalid', async () => {
+      const newPerson = {
+        personFullName: 'Elon Reeve Musk',
+        personCPF: '456.734.470-71',
+        personBirth: '1971-06-28',
+        personPhone: '1 800 613 8840',
+      };
+
+      const response = await global.testRequest
+        .post('/person')
+        .set({ 'x-access-token': token })
+        .send(newPerson);
+
+      expect(response.status).toBe(422);
+      expect(response.body).toEqual({
+        code: 422,
+        error: 'Person validation failed: personCPF: Invalid CPF',
+      });
+    });
+
+    it('should return 409 when cpf already exists', async () => {
+      const newPerson = {
+        personFullName: 'Elon Reeve Musk',
+        personCPF: '456.734.470-78',
+        personBirth: '1971-06-28',
+        personPhone: '1 800 613 8840',
+      };
+
+      await global.testRequest
+        .post('/person')
+        .set({ 'x-access-token': token })
+        .send(newPerson);
+      const response = await global.testRequest
+        .post('/person')
+        .set({ 'x-access-token': token })
+        .send(newPerson);
+
+      expect(response.status).toBe(409);
+      expect(response.body).toEqual({
+        code: 409,
+        error: expect.stringContaining(
+          'personCPF: already exists in the database.'
+        ),
+      });
     });
   });
 });

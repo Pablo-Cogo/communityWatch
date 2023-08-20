@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { BaseController } from '.';
 import { Person } from '@src/models/person';
 import { authMiddleware } from '@src/middlewares/auth';
-import Helpers from '@src/util/helpers';
+import HelperService from '@src/services/helpers';
 
 @Controller('person')
 @ClassMiddleware(authMiddleware)
@@ -13,8 +13,8 @@ export class PersonController extends BaseController {
     try {
       const person = new Person({
         ...req.body,
-        ...{ personCPF: Helpers.onlyNumbers(req.body.personCPF) },
-        ...{ personPhone: Helpers.onlyNumbers(req.body.personPhone) },
+        ...{ personCPF: HelperService.onlyNumbers(req.body.personCPF) },
+        ...{ personPhone: HelperService.onlyNumbers(req.body.personPhone) },
         ...{ userId: req.context?.userId },
       });
       const newPerson = await person.save();

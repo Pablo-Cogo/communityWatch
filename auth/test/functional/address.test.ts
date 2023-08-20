@@ -52,5 +52,51 @@ describe('address functional tests', () => {
       expect(response.status).toBe(201);
       expect(response.body).toEqual(expect.objectContaining(expectResponse));
     });
+
+    it('should return 422 when we not atending a select state', async () => {
+      const newAddress = {
+        addressState: 'RS',
+        addressCity: 'Chapecó',
+        addressDistrict: 'Engenho braun',
+        addressStreet: 'Avenida Leopoldo Sander - E',
+        addressNumber: '123D',
+        addressZipCode: '89809-300',
+      };
+
+      const response = await global.testRequest
+        .post('/address')
+        .set({ 'x-access-token': token })
+        .send(newAddress);
+
+      expect(response.status).toBe(422);
+      expect(response.body).toEqual({
+        code: 422,
+        error:
+          'Address validation failed: addressState: `RS` is not a valid enum value for path `addressState`.',
+      });
+    });
+
+    it('should return 422 when we not atending a select city', async () => {
+      const newAddress = {
+        addressState: 'SC',
+        addressCity: 'Pinhalzinho',
+        addressDistrict: 'Engenho braun',
+        addressStreet: 'Avenida Leopoldo Sander - E',
+        addressNumber: '123D',
+        addressZipCode: '89809-300',
+      };
+
+      const response = await global.testRequest
+        .post('/address')
+        .set({ 'x-access-token': token })
+        .send(newAddress);
+
+      expect(response.status).toBe(422);
+      expect(response.body).toEqual({
+        code: 422,
+        error:
+          'Address validation failed: addressCity: `Pinhalzinho` is not a valid enum value for path `addressCity`.',
+      });
+    });
   });
 });

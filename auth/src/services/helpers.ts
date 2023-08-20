@@ -1,4 +1,16 @@
-export default class Helpers {
+export default class HelperService {
+  public static onlyNumbers(value: string): string {
+    if (value) return value.toString().replace(/\D/g, '');
+    return value;
+  }
+
+  public static onlyLetters(value: string): string {
+    return value
+      .toString()
+      .replace(/[^a-zA-Z]/g, '')
+      .trim();
+  }
+
   public static isValidUrl(url: string): boolean {
     try {
       new URL(url);
@@ -8,9 +20,14 @@ export default class Helpers {
     }
   }
 
-  public static onlyNumbers(string: string): string {
-    if (string) return string.replace(/\D/g, '');
-    return string;
+  public static containsOnlyLetters(value: string): boolean {
+    const lettersOnlyPattern = /^[a-zA-Z\s]+$/;
+    return lettersOnlyPattern.test(value);
+  }
+
+  public static hasFourConsecutiveSameChars(value: string): boolean {
+    const consecutivePattern = /(.)\1{3}/;
+    return consecutivePattern.test(value);
   }
 
   public static isValidateCPF(cpf: string): boolean {
