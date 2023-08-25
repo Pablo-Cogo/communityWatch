@@ -23,8 +23,6 @@ export default class AuthService {
     return await bcrypt.compare(password, hashedPassword);
   }
 
-  public static checkRoleUser() {}
-
   public static generateToken(sub: string, role: userRole): string {
     return jwt.sign({ sub, role }, config.get<string>('App.auth.key'), {
       expiresIn: config.get('App.auth.tokenExpiresIn'),
