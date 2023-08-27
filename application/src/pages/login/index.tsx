@@ -4,8 +4,8 @@ import { change } from "../../helpers/change";
 import { UserLogin } from "./types";
 import { Button } from "../../components/atoms/Button";
 import { GoogleButton } from "../../components/molecules/googleButton";
-import { StyledLink } from "../../components/atoms/Link";
 import Logo from "../../assets/logo";
+import { DangerLink } from "../../components/molecules/dangerLink";
 
 export default function Login() {
   const [user, setUser] = useState<UserLogin | null>(null);
@@ -34,20 +34,20 @@ export default function Login() {
               val={user?.userPassword ?? ""}
               onChange={(e) => change.noMask(e, setUser)}
             />
-            <StyledLink
+            <DangerLink
               className="w-full flex justify-end mt-2 mb-2 font-normal text-blue"
               href="/#"
             >
               Esqueceu a senha?
-            </StyledLink>
+            </DangerLink>
             <Button type="submit" className="mt-3 w-full" typing="primary">
               Entrar
             </Button>
             <span className="w-full flex justify-center mt-6">
               Não tem uma conta?
-              <StyledLink className="ml-0.5 font-medium uppercase" href="/#">
+              <DangerLink className="ml-0.5 font-medium uppercase" href="/#">
                 cadastre-se
-              </StyledLink>
+              </DangerLink>
             </span>
             <div className="mx-auto my-6 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
               ou

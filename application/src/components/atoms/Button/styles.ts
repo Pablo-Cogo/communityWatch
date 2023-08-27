@@ -79,7 +79,7 @@ export const ContainerButton = styled.button<{
     css`
       border: 1px solid rgb(var(--gray-300));
       color: rgb(var(--gray-700));
-      background-color: rgb(var(--primary-background));
+      background-color: transparent
 
       &:hover {
         opacity: 0.9;

@@ -6,12 +6,13 @@ export const GlobalStyle = createGlobalStyle`
   ${(props) =>
     !props.theme.existsRoutes &&
     css`
+      --color-primary: 235, 135, 44;
       --primary-text: 0, 0, 0;
       --primary-background: 255, 255, 255;
 
-      --primary-button: 0, 149, 246;
-      --primary-button-hover: 24, 119, 242;
-      --primary-button-active: 76, 181, 249;
+      --primary-button: 235, 135, 44;
+      --primary-button-hover: 239, 159, 86;
+      --primary-button-active: 237, 147, 65;
 
       --secondary-text: 115, 115, 115;
       --secondary-background: 250, 250, 250;
@@ -20,7 +21,8 @@ export const GlobalStyle = createGlobalStyle`
       --secondary-button-hover: 59, 59, 59;
       --secondary-button-active: 93, 93, 93;
 
-      --link: 0, 149, 246;
+      --link: 235, 135, 44;
+      --header-link: 235, 135, 44;
 
       --gray-100: 243, 244, 246;
       --gray-300: 209, 213, 219;
@@ -38,7 +40,7 @@ export const GlobalStyle = createGlobalStyle`
       --system-11-line-height: 13px;
       --system-12-font-size: 12px;
       --system-12-line-height: 16px;
-      --system-13-font-size: 12px;
+      --system-13-font-size: 13px;
       --system-14-font-size: 14px;
       --system-14-line-height: 18px;
       --system-15-font-size: 15px;
@@ -57,6 +59,10 @@ export const GlobalStyle = createGlobalStyle`
       --system-28-line-height: 32px;
       --system-32-font-size: 32px;
       --system-32-line-height: 40px;
+
+      --scrollbar-thumb: rgba(235, 135, 44, 0.9);
+      --scrollbar-track: rgb(17, 28, 59);
+      --scrollbar-thumb-hover: rgb(235, 135, 44);
     `}
 
   ${(props) => props.theme.existsRoutes && css``}
@@ -65,7 +71,7 @@ export const GlobalStyle = createGlobalStyle`
 *{
     margin: 0;
     padding: 0;
-    font-family: 'Lato', sans-serif;
+    font-family: var(--font-family-system);
     font-weight: 400;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
     scrollbar-width: thin;

@@ -1,4 +1,4 @@
-import { LinkContainer } from "./styles";
+import * as S from "./styles";
 import { LinkProps } from "./types";
 
 export const StyledLink = ({
@@ -8,8 +8,8 @@ export const StyledLink = ({
   ...props
 }: LinkProps) => {
   return (
-    <LinkContainer to={href} className={className} {...props}>
+    <S.LinkContainer to={href} className={className} {...props}>
       {children}
-    </LinkContainer>
+    </S.LinkContainer>
   );
 };
