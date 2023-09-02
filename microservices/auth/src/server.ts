@@ -1,4 +1,5 @@
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import './util/module-alias';
 import { Server } from '@overnightjs/core';
 import * as database from '@src/database';
@@ -6,9 +7,10 @@ import { UserController } from './controllers/user';
 import { Application } from 'express';
 import { PersonController } from './controllers/person';
 import { AddressController } from './controllers/address';
+import config from 'config';
 
 export class SetupServer extends Server {
-  constructor(private port = 3000) {
+  constructor(private port = config.get('App.port')) {
     super();
   }
 
@@ -20,6 +22,13 @@ export class SetupServer extends Server {
 
   private setupExpress(): void {
     this.app.use(bodyParser.json());
+    this.app.use(
+      cors({
+        origin: ['http://localhost:3000'],
+        methods: ['GET', 'POST', 'DELETE', 'PUT'],
+        credentials: true,
+      })
+    );
   }
 
   private setupControllers(): void {

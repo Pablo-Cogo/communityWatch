@@ -32,6 +32,12 @@ export const GlobalStyle = createGlobalStyle`
       --separator: 219, 219, 219;
       --stroke: 219, 219, 219;
 
+      --bg-toast: #fff;
+      --color-success: green;
+      --color-error: red;
+      --color-warning: #ffc107;
+      --color-info: blue;
+
       --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI",
         Roboto, Helvetica, Arial, sans-serif;
       --system-10-font-size: 10px;

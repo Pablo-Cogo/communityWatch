@@ -13,7 +13,7 @@ export interface User {
   userImage?: string;
 }
 
-export interface UserLogin {
+export interface LoginProps {
   userEmail: string;
   userPassword: string;
 }

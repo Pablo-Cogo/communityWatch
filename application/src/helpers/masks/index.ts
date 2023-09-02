@@ -29,6 +29,11 @@ export const masks = {
     return value;
   },
 
+  float: (value: string): string => {
+    value = new String(value) as string;
+    return value.replace(/[^0-9.]/g, "");
+  },
+
   codMask: (value: string): string => {
     value = new String(value) as string;
     return value

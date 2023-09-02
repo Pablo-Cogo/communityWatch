@@ -6,6 +6,7 @@
     "auth": {
       "key": "some-key",
       "tokenExpiresIn": "7d"
-    }
+    },
+    "port": 5000
   }
 }
