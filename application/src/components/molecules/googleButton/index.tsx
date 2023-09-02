@@ -1,11 +1,12 @@
 import { Button } from "../../atoms/Button";
 
-export const GoogleButton = ({ className = "" }) => {
+export const GoogleButton = ({ className = "", ...rest }) => {
   return (
     <Button
       className={"w-full gap-x-2 font-medium " + className}
       variant="outline"
       typing="primary"
+      {...rest}
     >
       <svg
         width="24"

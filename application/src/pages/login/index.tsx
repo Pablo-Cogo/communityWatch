@@ -54,7 +54,7 @@ export default function Login() {
             <div className="mx-auto my-6 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
               ou
             </div>
-            <GoogleButton className="mb-7" />
+            <GoogleButton type="button" className="mb-7" />
           </form>
         </div>
       </article>
