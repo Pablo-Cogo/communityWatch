@@ -9,20 +9,23 @@ import ServiceLocator from "../services/service.locator";
 export default class Http {
   private instance: AxiosInstance;
   constructor(baseURL: string) {
-    axios.defaults.withCredentials = true;
     this.instance = axios.create({
       baseURL,
       timeout: 10000,
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     });
+    const token = localStorage.getItem("user");
+    if (token) this.instance.defaults.headers["x-access-token"] = token;
   }
 
-  async get<T>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<T | undefined> {
+  addHeader(key: string, value: string) {
+    this.instance.defaults.headers[key] = value;
+  }
+
+  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return this.request<T>("get", url, undefined, config);
   }
 
@@ -30,7 +33,7 @@ export default class Http {
     url: string,
     data?: any,
     config?: AxiosRequestConfig
-  ): Promise<T | undefined> {
+  ): Promise<T> {
     return this.request<T>("post", url, data, config);
   }
 
@@ -38,14 +41,11 @@ export default class Http {
     url: string,
     data?: any,
     config?: AxiosRequestConfig
-  ): Promise<T | undefined> {
+  ): Promise<T> {
     return this.request<T>("put", url, data, config);
   }
 
-  async delete<T>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<T | undefined> {
+  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return this.request<T>("delete", url, undefined, config);
   }
 
@@ -54,7 +54,7 @@ export default class Http {
     url: string,
     data?: any,
     config?: AxiosRequestConfig
-  ): Promise<T | undefined> {
+  ): Promise<T> {
     try {
       const response: AxiosResponse<T> = await this.instance.request({
         method,
@@ -64,25 +64,24 @@ export default class Http {
       });
       return response.data;
     } catch (error) {
-      this.handleRequestError(error); // Trate o erro aqui
-      return undefined;
+      throw this.handleRequestError(error);
     }
   }
 
-  private handleRequestError(error: any): void {
+  private handleRequestError(error: any): Error {
     const toastService = ServiceLocator.getToastService();
     if (error.response) {
       toastService.addSuccessToast(`Erro: ${error.response.data.error}`);
       toastService.addErrorToast(`Erro: ${error.response.data.error}`);
       toastService.addWarningToast(`Erro: ${error.response.data.error}`);
       toastService.addInfoToast(`Erro: ${error.response.data.error}`);
-      console.error(`Request failed with status ${error.response.code}`);
+      return new Error(`Erro: ${error.response.data.error}`);
     } else if (error.request) {
       toastService.addErrorToast("Erro: Sem resposta do servidor.");
-      console.error("Request was made but no response received");
+      return new Error("Erro: Sem resposta do servidor.");
     } else {
       toastService.addErrorToast(`Erro: ${error.message}`);
-      console.error(`Request setup error: ${error.message}`);
+      return new Error(`Erro: ${error.message}`);
     }
   }
 }

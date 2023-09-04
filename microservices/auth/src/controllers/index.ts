@@ -12,8 +12,22 @@ export abstract class BaseController {
       res
         .status(clientErrors.code)
         .send({ code: clientErrors.code, error: clientErrors.error });
+    } else if (error instanceof Error) {
+      const errors = this.handleErrors(error);
+      res.status(errors.code).send({ code: errors.code, error: errors.error });
     } else {
       res.status(500).send({ code: 500, error: 'Something went wrong!' });
+    }
+  }
+
+  private handleErrors(error: Error): {
+    code: number;
+    error: string;
+  } {
+    if (error.name === 'TokenExpiredError') {
+      return { code: 440, error: 'Sua sessão expirou!' };
+    } else {
+      return { code: 500, error: 'Something went wrong!' };
     }
   }
 

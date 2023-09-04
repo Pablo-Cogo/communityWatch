@@ -16,8 +16,8 @@ export default function Login() {
             onSubmit={(e) => handleSubmit(e)}
             className="px-14 py-10 sm:border sm:border-solid sm:border-[rgb(219,219,219)] sm:mb-2.5 sm:py-2.5 sm:px-10 sm:rounded-sm sm:flex sm:flex-col sm:items-center sm:px-6"
           >
-            <h1 className="text-center text-3xl font-medium tracking-tight text-gray-900 my-8">
-              <Logo className="max-w-[175px] scale-[2] w-full m-auto" />
+            <h1 className="text-center text-3xl font-medium tracking-tight text-gray-900 my-6">
+              <Logo className="max-w-[175px] scale-[1.4] w-full m-auto" />
             </h1>
             <Input
               id={"userEmail"}

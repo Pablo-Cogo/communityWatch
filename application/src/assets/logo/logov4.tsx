@@ -1,6 +1,6 @@
 import { LogoProps } from ".";
 
-const Logo5 = ({ className }: LogoProps) => {
+const Logo4 = ({ className }: LogoProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -630,4 +630,4 @@ const Logo5 = ({ className }: LogoProps) => {
   );
 };
 
-export default Logo5;
+export default Logo4;

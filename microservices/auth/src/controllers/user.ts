@@ -1,4 +1,4 @@
-import { Controller, Middleware, Post, Put } from '@overnightjs/core';
+import { Controller, Get, Middleware, Post, Put } from '@overnightjs/core';
 import { User, userRole } from '@src/models/user';
 import { Request, Response } from 'express';
 import { BaseController } from '.';
@@ -18,14 +18,13 @@ export class UserController extends BaseController {
       ) {
         res.status(401).send({
           code: 401,
-          error: 'User not found',
+          error: 'Usuário não encontrado.',
         });
         return;
       }
 
       if (token) {
         const claims = AuthService.decodeToken(token as string);
-
         if (
           claims.role !== userRole.admin &&
           !isNaN(req.body.userRole) &&
@@ -53,23 +52,40 @@ export class UserController extends BaseController {
     if (!user) {
       res.status(401).send({
         code: 401,
-        error: 'User not found',
+        error: 'Usuário não encontrado.',
       });
       return;
     }
-
-    if (
-      !(await AuthService.comparePasswords(userPassword, user.userPassword))
-    ) {
+    const comparePasswords = await AuthService.comparePasswords(
+      userPassword,
+      user.userPassword
+    );
+    if (!comparePasswords) {
       res.status(401).send({
         code: 401,
-        error: 'User not found',
+        error: 'Usuário não encontrado.',
       });
       return;
     }
-
     const token = AuthService.generateToken(user.id, user.userRole);
     res.status(200).send({ token });
+  }
+
+  @Get('validate')
+  public async validate(req: Request, res: Response): Promise<void> {
+    try {
+      const token = req.headers?.['x-access-token'];
+      if (token) {
+        const verify = AuthService.decodeToken(token as string);
+        if (verify) {
+          res.status(200).send(true);
+          return;
+        }
+      }
+      res.status(200).send(false);
+    } catch (error) {
+      this.sendCreateOrUpdateErrorResponse(res, error);
+    }
   }
 
   @Put('role')
