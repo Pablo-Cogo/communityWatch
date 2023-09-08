@@ -4,6 +4,8 @@ import { Request, Response } from 'express';
 import { BaseController } from '.';
 import AuthService from '@src/services/auth';
 import { authMiddlewareAdmin } from '@src/middlewares/auth';
+import { OAuth2Client } from 'google-auth-library';
+import axios from 'axios';
 
 @Controller('user')
 export class UserController extends BaseController {
@@ -68,7 +70,46 @@ export class UserController extends BaseController {
       return;
     }
     const token = AuthService.generateToken(user.id, user.userRole);
-    res.status(200).send({ token });
+    res.status(200).send({
+      userEmail,
+      userName: user.userName,
+      userImage: user.userImage,
+      token,
+    });
+  }
+
+  @Post('auth/google')
+  public async authGoogle(req: Request, res: Response): Promise<void> {
+    try {
+      const oAuth2Client = new OAuth2Client(
+        '390627263776-mnm20v2j43q857avt009g3qe6keeurh3.apps.googleusercontent.com',
+        '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',
+        'http://localhost:3000'
+      );
+      const { tokens } = await oAuth2Client.getToken(req.body.code);
+      console.log(tokens);
+      await oAuth2Client.setCredentials(tokens);
+      const response = await this.getUserData(
+        oAuth2Client.credentials.access_token
+      );
+      const user = await User.findOne({ userEmail: response.email });
+      if (!user) {
+        res.status(401).send({
+          code: 401,
+          error: 'Usuário não encontrado.',
+        });
+        return;
+      }
+      const token = AuthService.generateToken(user.id, user.userRole);
+      res.status(200).send({
+        userEmail: user.userEmail,
+        userName: user.userName,
+        userImage: response.picture,
+        token,
+      });
+    } catch (err) {
+      console.log('Error logging in with OAuth2 user', err);
+    }
   }
 
   @Get('validate')
@@ -78,8 +119,16 @@ export class UserController extends BaseController {
       if (token) {
         const verify = AuthService.decodeToken(token as string);
         if (verify) {
-          res.status(200).send(true);
-          return;
+          const user = await User.findOne({ _id: verify.sub });
+          console.log(user);
+          if (user) {
+            res.status(200).send({
+              userEmail: user.userEmail,
+              userName: user.userName,
+              userImage: user.userImage,
+            });
+            return;
+          }
         }
       }
       res.status(200).send(false);
@@ -98,5 +147,13 @@ export class UserController extends BaseController {
     } catch (error) {
       this.sendCreateOrUpdateErrorResponse(res, error);
     }
+  }
+
+  private async getUserData(access_token: string | null | undefined) {
+    const response = await axios.get(
+      `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
+    );
+    console.log(response.data.email);
+    return response.data;
   }
 }

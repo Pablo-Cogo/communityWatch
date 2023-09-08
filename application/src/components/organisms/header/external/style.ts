@@ -83,6 +83,38 @@ export const Ctas = styled.div`
   }
 `;
 
+export const UserLoggedContainer = styled.div``;
+
+export const UserNoImage = styled.div`
+  background: #ffb972;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  color: white;
+  font-size: 20px;
+
+  @media (max-width: 550px) {
+    width: 30px;
+    height: 30px;
+  }
+`;
+
+export const UserImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  @media (max-width: 550px) {
+    width: 30px;
+    height: 30px;
+  }
+`;
+
 export const Menu = styled.div`
   grid-area: menu;
   display: -webkit-box;

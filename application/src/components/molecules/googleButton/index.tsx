@@ -1,6 +1,7 @@
 import { Button } from "../../atoms/Button";
+import { ButtonProps } from "../../atoms/Button/types";
 
-export const GoogleButton = ({ className = "", ...rest }) => {
+export const GoogleButton = ({ className = "", ...rest }: ButtonProps) => {
   return (
     <Button
       className={"w-full gap-x-2 font-medium " + className}

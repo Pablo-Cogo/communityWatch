@@ -1,8 +1,65 @@
-import { Container, Ctas, Header, Menu, Nav } from "./style";
+import {
+  Container,
+  Ctas,
+  Header,
+  Menu,
+  Nav,
+  UserImage,
+  UserLoggedContainer,
+  UserNoImage,
+} from "./style";
 import Logo4 from "../../../../assets/logo/logov4";
 import { Button } from "../../../atoms/Button";
 import { HeaderLink } from "../../../molecules/headerLink";
 import { StyledLink } from "../../../atoms/Link";
+import useHasUserLogged from "../../../../hooks/hasUser.hook";
+import { useAuth } from "../../../../contexts/auth.context";
+import { useState } from "react";
+
+const CtasRender = () => {
+  const { userLogged } = useAuth();
+  const { hasUser } = useHasUserLogged();
+  const [imageLoaded, setImageLoaded] = useState(true);
+  console.log(hasUser);
+
+  if (hasUser === null) {
+    return <></>;
+  }
+
+  if (!userLogged || !hasUser) {
+    return (
+      <Ctas>
+        <HeaderLink href="/login">Entrar</HeaderLink>
+        <Button className="!hidden" id="responsive-button" href="/login">
+          Entrar
+        </Button>
+        <Button className="uppercase">Cadastrar-se</Button>
+      </Ctas>
+    );
+  } else {
+    return (
+      <Ctas>
+        <UserLoggedContainer>
+          {userLogged.userImage ? (
+            <>
+              {imageLoaded ? (
+                <UserImage
+                  src={userLogged.userImage}
+                  alt="err"
+                  onError={() => setImageLoaded(false)}
+                />
+              ) : (
+                <UserNoImage>{userLogged.userName[0]}</UserNoImage>
+              )}
+            </>
+          ) : (
+            <UserNoImage>{userLogged.userName[0]}</UserNoImage>
+          )}
+        </UserLoggedContainer>
+      </Ctas>
+    );
+  }
+};
 
 const ExternalHeader = () => {
   return (
@@ -12,13 +69,7 @@ const ExternalHeader = () => {
           <StyledLink href="/" style={{ gridArea: "logo" }}>
             <Logo4 className="origin-left max-[768px]:py-3 max-[550px]:py-6 max-w-full" />
           </StyledLink>
-          <Ctas>
-            <HeaderLink href="/login">Entrar</HeaderLink>
-            <Button className="!hidden" id="responsive-button" href="/login">
-              Entrar
-            </Button>
-            <Button className="uppercase">Cadastrar-se</Button>
-          </Ctas>
+          <CtasRender />
           <Menu>
             <HeaderLink href="/login">Home</HeaderLink>
             <HeaderLink href="/login">Mapa interativo</HeaderLink>

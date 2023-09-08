@@ -7,6 +7,8 @@ import ToastWrapper, {
 import ToastService from "./services/toast.service";
 import ServiceLocator from "./services/service.locator";
 import AppRouter from "./routes";
+import { AuthProvider } from "./contexts/auth.context";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
   const toastWrapperRef = useRef<ToastWrapperRef | null>(null);
@@ -18,7 +20,11 @@ function App() {
     <BrowserRouter>
       <GlobalStyle theme={{ existsRoutes: false }} />
       <ToastWrapper ref={toastWrapperRef} />
-      <AppRouter />
+      <GoogleOAuthProvider clientId="390627263776-mnm20v2j43q857avt009g3qe6keeurh3.apps.googleusercontent.com">
+        <AuthProvider>
+          <AppRouter />
+        </AuthProvider>
+      </GoogleOAuthProvider>
     </BrowserRouter>
   );
 }

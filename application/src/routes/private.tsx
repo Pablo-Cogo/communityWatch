@@ -1,20 +1,10 @@
 import { Navigate, useLocation } from "react-router-dom";
-import UserService from "../services/user.service";
-import { useEffect, useState } from "react";
+import useHasUserLogged from "../hooks/hasUser.hook";
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
-  const [hasUser, setHasUser] = useState<boolean | null>(null);
   const location = useLocation();
-
-  useEffect(() => {
-    UserService.isLogged()
-      .then((value) => {
-        setHasUser(value);
-      })
-      .catch(() => {
-        setHasUser(false);
-      });
-  }, []);
+  const { hasUser } = useHasUserLogged();
+  console.log(hasUser);
 
   if (hasUser === null) {
     return null;
