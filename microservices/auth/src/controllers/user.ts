@@ -4,8 +4,7 @@ import { Request, Response } from 'express';
 import { BaseController } from '.';
 import AuthService from '@src/services/auth';
 import { authMiddlewareAdmin } from '@src/middlewares/auth';
-import { OAuth2Client } from 'google-auth-library';
-import axios from 'axios';
+import GoogleAuthService from '@src/services/google';
 
 @Controller('user')
 export class UserController extends BaseController {
@@ -78,20 +77,19 @@ export class UserController extends BaseController {
     });
   }
 
+  @Get('auth/google/url')
+  public async getAuthUrl(_: Request, res: Response) {
+    const url = await GoogleAuthService.getAuthUrl();
+    res.status(200).send({ url });
+  }
+
   @Post('auth/google')
   public async authGoogle(req: Request, res: Response): Promise<void> {
     try {
-      const oAuth2Client = new OAuth2Client(
-        '390627263776-mnm20v2j43q857avt009g3qe6keeurh3.apps.googleusercontent.com',
-        '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',
-        'http://localhost:3000'
+      const access_token = await GoogleAuthService.getAccessToken(
+        req.body.code
       );
-      const { tokens } = await oAuth2Client.getToken(req.body.code);
-      console.log(tokens);
-      await oAuth2Client.setCredentials(tokens);
-      const response = await this.getUserData(
-        oAuth2Client.credentials.access_token
-      );
+      const response = await GoogleAuthService.getUserData(access_token);
       const user = await User.findOne({ userEmail: response.email });
       if (!user) {
         res.status(401).send({
@@ -147,13 +145,5 @@ export class UserController extends BaseController {
     } catch (error) {
       this.sendCreateOrUpdateErrorResponse(res, error);
     }
-  }
-
-  private async getUserData(access_token: string | null | undefined) {
-    const response = await axios.get(
-      `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
-    );
-    console.log(response.data.email);
-    return response.data;
   }
 }

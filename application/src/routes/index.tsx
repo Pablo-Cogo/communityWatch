@@ -4,6 +4,7 @@ import Login from "../pages/login";
 import PrivateRoute from "./private";
 import { Suspense } from "react";
 import Dashboard from "../pages/dashboard";
+import AuthCallback from "../pages/login/callback";
 
 const AppRouter = () => {
   return (
@@ -11,6 +12,7 @@ const AppRouter = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
         <Route
           path="/adm"
           element={

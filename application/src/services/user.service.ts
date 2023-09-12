@@ -28,6 +28,13 @@ export default class UserService {
     return response;
   }
 
+  static async getUrlGoogleLogin(): Promise<string> {
+    const { url } = await this.http.get<{ url: string }>(
+      "/user/auth/google/url"
+    );
+    return url;
+  }
+
   static async googleLogin(code: string) {
     const toastService = ServiceLocator.getToastService();
     const response = await this.http

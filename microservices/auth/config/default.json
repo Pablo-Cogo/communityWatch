@@ -7,6 +7,11 @@
       "key": "some-key",
       "tokenExpiresIn": "7d"
     },
+    "google": {
+      "clientId": "390627263776-mnm20v2j43q857avt009g3qe6keeurh3.apps.googleusercontent.com",
+      "clientSecret": "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",
+      "redirectUri": "http://localhost:3000/auth/callback"
+    },
     "port": 5000
   }
 }

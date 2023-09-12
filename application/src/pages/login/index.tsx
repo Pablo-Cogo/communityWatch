@@ -7,7 +7,7 @@ import { DangerLink } from "../../components/molecules/dangerLink";
 import { useAuth } from "../../contexts/auth.context";
 
 export default function Login() {
-  const { user, setUser, login, googleLogin } = useAuth();
+  const { user, setUser, login, getUrlGoogleLogin } = useAuth();
   return (
     <section className="flex min-h-full overflow-hidden">
       <article className="flex w-full justify-center sm:my-12">
@@ -55,7 +55,7 @@ export default function Login() {
               ou
             </div>
             <GoogleButton
-              onClick={() => googleLogin()}
+              onClick={() => getUrlGoogleLogin()}
               type="button"
               className="sm:mb-5 md:mb-7"
             />

@@ -2,14 +2,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import UserService from "../services/user.service";
 import { LoginProps, UserProps } from "../types/user";
 import React, { useState, createContext, useContext } from "react";
-import { useGoogleLogin } from "@react-oauth/google";
 
 interface AuthContextProps {
   user: LoginProps | null;
   userLogged: UserProps | null;
   setUser: React.Dispatch<React.SetStateAction<LoginProps | null>>;
   login: (e: React.FormEvent<HTMLFormElement>) => void;
-  googleLogin: () => void;
+  getUrlGoogleLogin: () => void;
+  googleLogin: (code: string | null) => void;
   hasUser: () => Promise<boolean>;
   logout: () => void;
 }
@@ -34,16 +34,25 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     navigate(from);
   };
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: async ({ code }) => {
+  const getUrlGoogleLogin = async () => {
+    const url = await UserService.getUrlGoogleLogin();
+    window.location.href = url;
+  };
+
+  const googleLogin = async (code: string | null) => {
+    setUser(null);
+    if (code) {
       const response = await UserService.googleLogin(code);
-      setUser(null);
-      if (response) setUserLogged(response);
-      const from = location.state?.from || "/adm";
-      navigate(from);
-    },
-    flow: "auth-code",
-  });
+      console.log(response);
+      if (response) {
+        setUserLogged(response);
+        const from = location.state?.from || "/adm";
+        navigate(from);
+      } else {
+        navigate("/login");
+      }
+    }
+  };
 
   const hasUser = async () => {
     const response = await UserService.isLogged();
@@ -64,6 +73,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         userLogged,
         setUser,
         login,
+        getUrlGoogleLogin,
         googleLogin,
         hasUser,
         logout,

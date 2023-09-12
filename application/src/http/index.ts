@@ -71,10 +71,7 @@ export default class Http {
   private handleRequestError(error: any): Error {
     const toastService = ServiceLocator.getToastService();
     if (error.response) {
-      toastService.addSuccessToast(`Erro: ${error.response.data.error}`);
       toastService.addErrorToast(`Erro: ${error.response.data.error}`);
-      toastService.addWarningToast(`Erro: ${error.response.data.error}`);
-      toastService.addInfoToast(`Erro: ${error.response.data.error}`);
       return new Error(`Erro: ${error.response.data.error}`);
     } else if (error.request) {
       toastService.addErrorToast("Erro: Sem resposta do servidor.");
