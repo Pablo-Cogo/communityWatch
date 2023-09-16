@@ -5,12 +5,18 @@ import PrivateRoute from "./private";
 import { Suspense } from "react";
 import Dashboard from "../pages/dashboard";
 import AuthCallback from "../pages/login/callback";
+import SignUp from "../pages/signup";
+import MailSignUp from "../pages/signup/mail";
+import AddressSignUp from "../pages/signup/address";
 
 const AppRouter = () => {
   return (
     <Suspense fallback={<div>Carregando...</div>}>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signup/new" element={<MailSignUp />} />
+        <Route path="/signup/address" element={<AddressSignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route

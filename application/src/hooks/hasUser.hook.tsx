@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../contexts/auth.context";
+import { useUserContext } from "../contexts/user.context";
 
 const useHasUserLogged = () => {
-  const { userLogged, hasUser: checkHasUser } = useAuth();
+  const { userLogged, hasUser: checkHasUser } = useUserContext();
   const [hasUser, setHasUser] = useState<boolean | null>(null);
-  console.log(hasUser);
   useEffect(() => {
     if (userLogged) setHasUser(true);
     else {
       checkHasUser()
         .then((value) => {
-          console.log(value);
           setHasUser(value);
         })
         .catch(() => {

@@ -1,11 +1,11 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { useAuth } from "../../contexts/auth.context";
 import Loading from "../../components/organisms/loading";
+import { useGoogleContext } from "../../contexts/google.context";
 
 function AuthCallback() {
   const location = useLocation();
-  const { googleLogin } = useAuth();
+  const { googleLogin } = useGoogleContext();
 
   useEffect(() => {
     const code = new URLSearchParams(location.search).get("code");

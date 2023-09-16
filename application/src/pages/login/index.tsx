@@ -4,16 +4,21 @@ import { Button } from "../../components/atoms/Button";
 import { GoogleButton } from "../../components/molecules/googleButton";
 import Logo from "../../assets/logo";
 import { DangerLink } from "../../components/molecules/dangerLink";
-import { useAuth } from "../../contexts/auth.context";
+import { useUserContext } from "../../contexts/user.context";
+import { useState } from "react";
+import { LoginProps } from "../../types/user";
+import { useGoogleContext } from "../../contexts/google.context";
 
 export default function Login() {
-  const { user, setUser, login, getUrlGoogleLogin } = useAuth();
+  const [user, setUser] = useState<LoginProps | null>(null);
+  const { login } = useUserContext();
+  const { getUrlGoogleLogin } = useGoogleContext();
   return (
     <section className="flex min-h-full overflow-hidden">
-      <article className="flex w-full justify-center sm:my-12">
+      <article className="flex w-full justify-center sm:my-6">
         <div className="flex flex-col grow w-full sm:max-w-[350px]">
           <form
-            onSubmit={(e) => login(e)}
+            onSubmit={(e) => login(e, user, setUser)}
             className="px-14 py-10 sm:border sm:border-solid sm:border-[rgb(219,219,219)] sm:mb-2.5 sm:py-2.5 sm:px-10 sm:rounded-sm sm:flex sm:flex-col sm:items-center sm:px-6"
           >
             <h1 className="text-center text-3xl font-medium tracking-tight text-gray-900 md:my-6">
@@ -21,7 +26,7 @@ export default function Login() {
             </h1>
             <Input
               id={"userEmail"}
-              label="Email: "
+              label="Email"
               type="email"
               className="mt-3"
               val={user?.userEmail ?? ""}
@@ -31,7 +36,7 @@ export default function Login() {
             <Input
               type="password"
               id="userPassword"
-              label="Senha: "
+              label="Senha"
               className="mt-3"
               val={user?.userPassword ?? ""}
               onChange={(e) => change.noMask(e, setUser)}
@@ -47,7 +52,10 @@ export default function Login() {
             </Button>
             <span className="w-full flex justify-center mt-4 md:mt-6">
               Não tem uma conta?
-              <DangerLink className="ml-0.5 font-medium uppercase" href="/#">
+              <DangerLink
+                className="ml-0.5 font-medium uppercase"
+                href="/signup"
+              >
                 cadastre-se
               </DangerLink>
             </span>
@@ -55,7 +63,7 @@ export default function Login() {
               ou
             </div>
             <GoogleButton
-              onClick={() => getUrlGoogleLogin()}
+              onClick={() => getUrlGoogleLogin("/auth/callback")}
               type="button"
               className="sm:mb-5 md:mb-7"
             />

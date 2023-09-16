@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import * as S from "./styles";
 import { LinkProps } from "./types";
 
@@ -7,8 +8,14 @@ export const StyledLink = ({
   className,
   ...props
 }: LinkProps) => {
+  const location = useLocation();
   return (
-    <S.LinkContainer to={href} className={className} {...props}>
+    <S.LinkContainer
+      to={href}
+      className={className}
+      state={{ from: location }}
+      {...props}
+    >
       {children}
     </S.LinkContainer>
   );

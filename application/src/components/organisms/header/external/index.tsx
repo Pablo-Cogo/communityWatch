@@ -13,11 +13,11 @@ import { Button } from "../../../atoms/Button";
 import { HeaderLink } from "../../../molecules/headerLink";
 import { StyledLink } from "../../../atoms/Link";
 import useHasUserLogged from "../../../../hooks/hasUser.hook";
-import { useAuth } from "../../../../contexts/auth.context";
 import { useState } from "react";
+import { useUserContext } from "../../../../contexts/user.context";
 
 const CtasRender = () => {
-  const { userLogged } = useAuth();
+  const { userLogged } = useUserContext();
   const { hasUser } = useHasUserLogged();
   const [imageLoaded, setImageLoaded] = useState(true);
   console.log(hasUser);

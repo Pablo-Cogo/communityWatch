@@ -78,13 +78,18 @@ export class UserController extends BaseController {
   }
 
   @Get('auth/google/url')
-  public async getAuthUrl(_: Request, res: Response) {
-    const url = await GoogleAuthService.getAuthUrl();
+  public async getAuthUrl(req: Request, res: Response) {
+    const redirect = req.query.redirect;
+    console.log(typeof redirect);
+    const url = await GoogleAuthService.getAuthUrl(
+      typeof redirect === 'string' ? redirect : null
+    );
     res.status(200).send({ url });
   }
 
   @Post('auth/google')
   public async authGoogle(req: Request, res: Response): Promise<void> {
+    console.log(req.body.code);
     try {
       const access_token = await GoogleAuthService.getAccessToken(
         req.body.code

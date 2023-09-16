@@ -1,15 +1,23 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import * as S from "./styles";
 import { InputProps } from "./types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const { type = "text", className, label, val, id, ...rest } = props;
   const [passwordVisible, setPasswordVisible] = useState(false);
   const alterPasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
+  useEffect(() => {
+    if (!ref && !val) {
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
+    }
+  }, [ref, val]);
   return (
     <S.ContainerInput className={className}>
       <S.Label htmlFor={id} val={val}>
@@ -17,7 +25,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         {type === "password" ? (
           <>
             <S.Input
-              ref={ref}
+              ref={ref ?? inputRef}
               id={id}
               name={id}
               type={passwordVisible ? "text" : "password"}

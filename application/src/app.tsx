@@ -7,7 +7,7 @@ import ToastWrapper, {
 import ToastService from "./services/toast.service";
 import ServiceLocator from "./services/service.locator";
 import AppRouter from "./routes";
-import { AuthProvider } from "./contexts/auth.context";
+import AppProvider from "./contexts/app.context";
 
 function App() {
   const toastWrapperRef = useRef<ToastWrapperRef | null>(null);
@@ -19,9 +19,9 @@ function App() {
     <BrowserRouter>
       <GlobalStyle theme={{ existsRoutes: false }} />
       <ToastWrapper ref={toastWrapperRef} />
-      <AuthProvider>
+      <AppProvider>
         <AppRouter />
-      </AuthProvider>
+      </AppProvider>
     </BrowserRouter>
   );
 }

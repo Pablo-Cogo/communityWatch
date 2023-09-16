@@ -13,7 +13,7 @@ export interface ResponseGoogleProps {
 }
 
 export class GoogleAuth {
-  private readonly authClient: OAuth2Client;
+  private authClient: OAuth2Client;
   private readonly scopes: string[];
 
   constructor(protected request = new HTTPUtil.Request()) {
@@ -25,7 +25,8 @@ export class GoogleAuth {
     });
   }
 
-  public async generateAuthUrl(): Promise<string> {
+  public async generateAuthUrl(redirect: string | null): Promise<string> {
+    this.updateRedirectUri(redirect);
     const authUrl = this.authClient.generateAuthUrl({
       access_type: 'offline',
       scope: this.scopes,
@@ -35,6 +36,7 @@ export class GoogleAuth {
   }
 
   public async getToken(code: string): Promise<Credentials> {
+    console.log(code);
     const { tokens } = await this.authClient.getToken(code);
     return tokens;
   }
@@ -44,5 +46,13 @@ export class GoogleAuth {
       `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
     );
     return response.data;
+  }
+
+  private updateRedirectUri(redirect: string | null) {
+    this.authClient = new OAuth2Client({
+      clientId: googleConfig.get('clientId'),
+      clientSecret: googleConfig.get('clientSecret'),
+      redirectUri: `${googleConfig.get('redirectUri')}${redirect ?? ''}`,
+    });
   }
 }

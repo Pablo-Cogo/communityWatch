@@ -28,9 +28,9 @@ export default class UserService {
     return response;
   }
 
-  static async getUrlGoogleLogin(): Promise<string> {
+  static async getUrlGoogleLogin(redirect: string): Promise<string> {
     const { url } = await this.http.get<{ url: string }>(
-      "/user/auth/google/url"
+      `/user/auth/google/url?redirect=${redirect}`
     );
     return url;
   }
