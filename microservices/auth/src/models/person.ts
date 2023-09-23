@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 import { CUSTOM_VALIDATION } from '.';
 import HelperService from '@src/services/helpers';
 
@@ -8,19 +8,20 @@ export interface Person {
   personCPF: string;
   personBirth: Date;
   personPhone?: string;
-  userId: string;
-  addressId: string;
+  userId: Schema.Types.ObjectId;
+  addressId: Schema.Types.ObjectId;
 }
 
-interface PersonModel extends Omit<Person, '_id'>, Document {}
+export interface IPerson extends Omit<Person, '_id'>, Document {}
 
-const schema = new mongoose.Schema(
+const schema = new mongoose.Schema<IPerson>(
   {
     personFullName: {
       type: String,
-      required: true,
-      minlenght: 3,
-      maxlength: 60,
+      describe: 'Nome de usuário',
+      required: [true, 'O campo é obrigatório.'],
+      minlength: [3, 'O campo deve ter no mínimo 3 caracteres.'],
+      maxlength: [60, 'O campo deve ter no máximo 60 caracteres.'],
       validate: {
         validator: (value: string) => {
           return (
@@ -28,33 +29,43 @@ const schema = new mongoose.Schema(
             !HelperService.hasFourConsecutiveSameChars(value)
           );
         },
-        message: 'Invalid Full Name',
+        message: 'Nome completo inválido',
       },
     },
     personCPF: {
       type: String,
-      required: true,
+      describe: 'CPF',
+      required: [true, 'O campo é obrigatório.'],
       unique: true,
-      maxlength: 11,
+      maxlength: [11, 'O campo deve ter no máximo 11 caracteres.'],
       validate: {
         validator: (value: string) => {
           return HelperService.isValidateCPF(value);
         },
-        message: 'Invalid CPF',
+        message: 'Campo inválido',
       },
     },
-    personBirth: { type: Date, required: true },
-    personPhone: { type: String, required: false, maxlength: 11 },
+    personBirth: {
+      type: Date,
+      describe: 'Data de nascimento',
+      required: [true, 'O campo é obrigatório.'],
+    },
+    personPhone: {
+      type: String,
+      describe: 'Telefone',
+      required: [false],
+      maxlength: [11, 'O campo deve ter no máximo 11 caracteres.'],
+    },
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: [true, 'O campo é obrigatório.'],
       unique: true,
     },
     addressId: {
       type: Schema.Types.ObjectId,
       ref: 'Address',
-      required: false,
+      required: [false],
     },
   },
   {
@@ -73,11 +84,11 @@ schema.path('personCPF').validate(
     const cpfCount = await mongoose.models.Person.countDocuments({ personCPF });
     return !cpfCount;
   },
-  'already exists in the database.',
+  'Já existe na base de dados.',
   CUSTOM_VALIDATION.DUPLICATED
 );
 
-schema.pre<PersonModel>('save', async function (): Promise<void> {
+schema.pre<IPerson>('save', async function (): Promise<void> {
   this.personCPF = HelperService.onlyNumbers(this.personCPF);
   if (this.personPhone)
     this.personPhone = HelperService.onlyNumbers(this.personPhone);
@@ -89,8 +100,8 @@ schema.path('userId').validate(
     const userCount = await mongoose.models.Person.countDocuments({ userId });
     return !userCount;
   },
-  'already exists in the database.',
+  'Já existe na base de dados.',
   CUSTOM_VALIDATION.DUPLICATED
 );
 
-export const Person = mongoose.model<PersonModel>('Person', schema);
+export const Person: Model<IPerson> = mongoose.model<IPerson>('Person', schema);

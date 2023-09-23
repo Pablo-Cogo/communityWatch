@@ -1,5 +1,5 @@
 import { Controller, Get, Middleware, Post, Put } from '@overnightjs/core';
-import { User, userRole } from '@src/models/user';
+import { IUser, User, userRole } from '@src/models/user';
 import { Request, Response } from 'express';
 import { BaseController } from '.';
 import AuthService from '@src/services/auth';
@@ -7,7 +7,11 @@ import { authMiddlewareAdmin } from '@src/middlewares/auth';
 import GoogleAuthService from '@src/services/google';
 
 @Controller('user')
-export class UserController extends BaseController {
+export class UserController extends BaseController<IUser> {
+  constructor() {
+    super(User);
+  }
+
   @Post('')
   public async create(req: Request, res: Response): Promise<void> {
     const token = req.headers?.['x-access-token'];
@@ -59,7 +63,7 @@ export class UserController extends BaseController {
     }
     const comparePasswords = await AuthService.comparePasswords(
       userPassword,
-      user.userPassword
+      user.userPassword ?? ''
     );
     if (!comparePasswords) {
       res.status(401).send({
@@ -97,6 +101,23 @@ export class UserController extends BaseController {
       const response = await GoogleAuthService.getUserData(access_token);
       const user = await User.findOne({ userEmail: response.email });
       if (!user) {
+        if (response.email) {
+          const str = {
+            isLogged: false,
+            userEmail: response.email,
+            userName: response.name,
+            userImage: response.picture,
+          };
+          const token = AuthService.encodeStringToToken(JSON.stringify(str));
+          res.status(200).send({
+            isLogged: false,
+            userEmail: str.userEmail,
+            userName: str.userName,
+            userImage: str.userImage,
+            token,
+          });
+          return;
+        }
         res.status(401).send({
           code: 401,
           error: 'Usuário não encontrado.',
@@ -105,13 +126,34 @@ export class UserController extends BaseController {
       }
       const token = AuthService.generateToken(user.id, user.userRole);
       res.status(200).send({
+        isLogged: true,
         userEmail: user.userEmail,
         userName: user.userName,
-        userImage: response.picture,
+        userImage: user.userImage,
         token,
       });
     } catch (err) {
       console.log('Error logging in with OAuth2 user', err);
+    }
+  }
+
+  @Post('auth/google/encode')
+  public async encodeToken(req: Request, res: Response): Promise<void> {
+    try {
+      const token = AuthService.encodeStringToToken(JSON.stringify(req.body));
+      res.status(200).send(token);
+    } catch (error) {
+      this.sendCreateOrUpdateErrorResponse(res, error);
+    }
+  }
+
+  @Post('auth/google/decode')
+  public async decodeToken(req: Request, res: Response): Promise<void> {
+    try {
+      const decodeToken = AuthService.decodeTokenToJson(req.body.token);
+      res.status(200).send(decodeToken);
+    } catch (error) {
+      this.sendCreateOrUpdateErrorResponse(res, error);
     }
   }
 

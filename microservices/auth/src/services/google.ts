@@ -1,4 +1,4 @@
-import { GoogleAuth } from '@src/clients/google';
+import { GoogleAuth, ResponseGoogleProps } from '@src/clients/google';
 
 export default class GoogleAuthService {
   private static readonly googleAuth: GoogleAuth = new GoogleAuth();
@@ -24,7 +24,9 @@ export default class GoogleAuthService {
     }
   }
 
-  public static async getUserData(access_token: string | null | undefined) {
+  public static async getUserData(
+    access_token: string | null | undefined
+  ): Promise<ResponseGoogleProps> {
     try {
       return this.googleAuth.getUserData(access_token);
     } catch (error) {

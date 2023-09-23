@@ -6,10 +6,21 @@ const googleConfig: IConfig = config.get('App.google');
 
 export interface ResponseGoogleProps {
   sub: string;
+  name: string;
+  given_name: string;
+  family_name: string;
   picture: string;
   email: string;
   email_verified: boolean;
+  locale: string;
   hd?: string;
+}
+
+export interface ResponseAuthProps {
+  isLogged: boolean;
+  userEmail: string;
+  userName: string;
+  userImage: string | null;
 }
 
 export class GoogleAuth {
@@ -17,7 +28,10 @@ export class GoogleAuth {
   private readonly scopes: string[];
 
   constructor(protected request = new HTTPUtil.Request()) {
-    this.scopes = ['https://www.googleapis.com/auth/userinfo.email'];
+    this.scopes = [
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+    ];
     this.authClient = new OAuth2Client({
       clientId: googleConfig.get('clientId'),
       clientSecret: googleConfig.get('clientSecret'),
@@ -41,10 +55,13 @@ export class GoogleAuth {
     return tokens;
   }
 
-  public async getUserData(access_token: string | null | undefined) {
+  public async getUserData(
+    access_token: string | null | undefined
+  ): Promise<ResponseGoogleProps> {
     const response = await this.request.get<ResponseGoogleProps>(
       `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
     );
+    console.log(response.data);
     return response.data;
   }
 

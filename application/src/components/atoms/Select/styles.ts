@@ -11,17 +11,6 @@ export const ContainerInput = styled.div`
   font-size: var(--system-14-font-size);
   border: 1px solid rgb(var(--stroke));
   background-color: rgb(var(--secondary-background));
-
-  & .eye {
-    height: 1em;
-    cursor: pointer;
-    color: rgb(var(--secondary-button));
-    background: transparent;
-  }
-
-  & .eye:hover {
-    opacity: 0.5;
-  }
 `;
 
 export const Label = styled.label<{ val: string | number | readonly string[] }>`
@@ -67,20 +56,23 @@ export const Label = styled.label<{ val: string | number | readonly string[] }>`
       & > span {
         transform: scale(calc(10 / 12)) translateY(-10px);
       }
-      & > input {
+      & > select {
         font-size: var(--system-12-font-size);
-        padding: 14px 8px 2px 8px !important;
+        padding: 14px 8px 2px 4px !important;
       }
     `}
 `;
 
-export const Input = styled.input`
+export const Select = styled.select`
   border: 0;
   margin: 0;
   outline: none;
   overflow: hidden;
-  padding: 9px 8px 7px 8px;
   text-overflow: ellipsis;
+  width: 99%;
+  background: transparent;
+  font-size: var(--system-12-font-size);
+  padding: 9px 8px 7px 8px;
 
   ::-webkit-input-placeholder {
     color: transparent;

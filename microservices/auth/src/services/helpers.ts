@@ -20,6 +20,15 @@ export default class HelperService {
     }
   }
 
+  public static checkStrIsJson(str: string): boolean {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   public static containsOnlyLetters(value: string): boolean {
     const lettersOnlyPattern = /^[a-zA-Z\s]+$/;
     return lettersOnlyPattern.test(value);

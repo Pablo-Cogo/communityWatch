@@ -33,7 +33,9 @@ const CtasRender = () => {
         <Button className="!hidden" id="responsive-button" href="/login">
           Entrar
         </Button>
-        <Button className="uppercase">Cadastrar-se</Button>
+        <Button className="uppercase" href="/signup">
+          Cadastrar-se
+        </Button>
       </Ctas>
     );
   } else {

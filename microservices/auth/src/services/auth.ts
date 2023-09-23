@@ -2,6 +2,7 @@ import { userRole } from '@src/models/user';
 import bcrypt from 'bcrypt';
 import config from 'config';
 import jwt from 'jsonwebtoken';
+import HelperService from './helpers';
 
 export interface JwtToken {
   sub: string;
@@ -31,5 +32,22 @@ export default class AuthService {
 
   public static decodeToken(token: string): JwtToken {
     return jwt.verify(token, config.get('App.auth.key')) as JwtToken;
+  }
+
+  public static encodeStringToToken(str: string) {
+    if (HelperService.checkStrIsJson(str)) {
+      const json = JSON.parse(str);
+      return jwt.sign(json, config.get<string>('App.auth.key'), {
+        expiresIn: config.get('App.auth.tokenExpiresIn'),
+      });
+    } else {
+      return jwt.sign(str, config.get<string>('App.auth.key'), {
+        expiresIn: config.get('App.auth.tokenExpiresIn'),
+      });
+    }
+  }
+
+  public static decodeTokenToJson<T>(token: string): T {
+    return jwt.verify(token, config.get('App.auth.key')) as T;
   }
 }

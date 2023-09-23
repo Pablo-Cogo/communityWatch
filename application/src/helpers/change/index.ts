@@ -2,7 +2,7 @@ import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
 interface ChangeUtils {
   noMask: <T = any[]>(
-    value: ChangeEvent<HTMLInputElement>,
+    value: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>,
     setValues: Dispatch<SetStateAction<T>>
   ) => void;
   valuesUpper: <T = any[]>(

@@ -1,6 +1,6 @@
 import React, { useState, createContext, useContext } from "react";
 import UserService from "../services/user.service";
-import { LoginProps, UserProps } from "../types/user";
+import { LoginProps, SignUpMailProps, UserProps } from "../types/user";
 import { useLocation, useNavigate } from "react-router-dom";
 
 interface UserContextProps {
@@ -13,6 +13,8 @@ interface UserContextProps {
   ) => void;
   hasUser: () => Promise<boolean>;
   logout: () => void;
+  encodeMailSignUp: (user: SignUpMailProps) => void;
+  getMailSignUp: () => Promise<SignUpMailProps | null>;
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
@@ -42,6 +44,15 @@ const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const encodeMailSignUp = async (user: SignUpMailProps) => {
+    await UserService.encodeMailSignUp(user);
+    navigate("/signup/address");
+  };
+
+  const getMailSignUp = async () => {
+    return await UserService.decodeMailSignUp();
+  };
+
   const hasUser = async () => {
     const response = await UserService.isLogged();
     if (typeof response !== "boolean") {
@@ -64,6 +75,8 @@ const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         login,
         hasUser,
         logout,
+        encodeMailSignUp,
+        getMailSignUp,
       }}
     >
       {children}

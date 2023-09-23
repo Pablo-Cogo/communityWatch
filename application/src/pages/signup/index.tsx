@@ -2,7 +2,7 @@ import { Button } from "../../components/atoms/Button";
 import { DangerLink } from "../../components/molecules/dangerLink";
 import { GoogleButton } from "../../components/molecules/googleButton";
 import { useGoogleContext } from "../../contexts/google.context";
-import SignUpContainer from "./shared";
+import SignUpContainer from "../../components/organisms/signup";
 
 const SignUp = () => {
   const { getUrlGoogleLogin } = useGoogleContext();

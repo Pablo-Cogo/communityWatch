@@ -5,5 +5,6 @@ export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   id: string;
   val: string | ReadonlyArray<string> | number;
   type: HTMLInputTypeAttribute;
+  required?: boolean;
   className?: string | undefined;
 };

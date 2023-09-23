@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Model } from 'mongoose';
 import { CUSTOM_VALIDATION } from '.';
 import AuthService from '@src/services/auth';
 import HelperService from '@src/services/helpers';
@@ -13,39 +13,52 @@ export interface User {
   _id?: string;
   userName: string;
   userEmail: string;
-  userPassword: string;
+  userPassword?: string;
   userRole: userRole;
   userImage?: string;
 }
 
-interface UserModel extends Omit<User, '_id'>, Document {}
+export interface IUser extends Omit<User, '_id'>, Document {}
 
-const schema = new mongoose.Schema(
+const schema = new mongoose.Schema<IUser>(
   {
-    userName: { type: String, required: true, maxlength: 50 },
+    userName: {
+      type: String,
+      describe: 'Nome de usuário',
+      required: [true, 'O campo é obrigatório.'],
+      maxlength: [50, 'O campo deve ter no máximo 50 caracteres.'],
+    },
     userEmail: {
       type: String,
-      required: true,
+      describe: 'Email',
+      required: [true, 'O campo é obrigatório.'],
       unique: true,
-      maxlength: 254,
+      maxlength: [254, 'O campo deve ter no máximo 254 caracteres.'],
     },
-    userPassword: { type: String, required: true, maxlength: 60 },
+    userPassword: {
+      type: String,
+      describe: 'Senha',
+      required: [false],
+      maxlength: [60, 'O campo deve ter no máximo 60 caracteres.'],
+    },
     userRole: {
       type: Number,
+      describe: 'Papal do usuário',
       enum: userRole,
-      required: true,
-      default: 2,
+      required: [true, 'O campo é obrigatório.'],
+      default: userRole.user,
     },
     userImage: {
       type: String,
-      required: false,
+      describe: 'Imagem de perfil',
+      required: [false],
       validate: {
         validator: (value: string) => {
           return !value || HelperService.isValidUrl(value);
         },
-        message: 'Invalid URL',
+        message: 'URL inválida',
       },
-      maxlength: 254,
+      maxlength: [254, 'O campo deve ter no máximo 254 caracteres.'],
     },
   },
   {
@@ -60,11 +73,11 @@ const schema = new mongoose.Schema(
 );
 
 schema.path('userEmail').validate(
-  async (userEmail: string) => {
+  async function (userEmail: string) {
     const emailCount = await mongoose.models.User.countDocuments({ userEmail });
-    return !emailCount;
+    return emailCount === 0; // Corrigido para retornar true se o email não existir
   },
-  'already exists in the database.',
+  'Já existe na base de dados.',
   CUSTOM_VALIDATION.DUPLICATED
 );
 
@@ -81,8 +94,11 @@ schema.pre<User & Document>('save', async function (): Promise<void> {
     const hashedPassword = await AuthService.hashPassword(this.userPassword);
     this.userPassword = hashedPassword;
   } catch (error) {
-    console.error(`Error hashing password for the user ${this.userName}`);
+    console.error(
+      `Erro ao fazer o hash da senha para o usuário ${this.userName}`
+    );
+    throw error;
   }
 });
 
-export const User = mongoose.model<UserModel>('User', schema);
+export const User: Model<IUser> = mongoose.model<IUser>('User', schema);
