@@ -49,7 +49,6 @@ const AddressSignUp = () => {
     e.preventDefault();
     const toastService = ServiceLocator.getToastService();
     if (validateForm()) {
-      console.log(userSignUp);
       if (userSignUp && values) {
         try {
           const address = await AddressService.registerAddress({
@@ -60,21 +59,15 @@ const AddressSignUp = () => {
             addressStreet: values.addressStreet,
             addressZipCode: values.addressZipCode,
           });
-          console.log(address);
+
+          console.log(userSignUp.userImage);
 
           const user = await UserService.registerUser({
             userName: userSignUp.userName,
             userEmail: userSignUp.userEmail,
             userRole: 2,
             userPassword: null,
-          });
-          console.log({
-            addressId: address.id ?? "",
-            personPhone: userSignUp.personPhone,
-            userId: user.id ?? "",
-            personCPF: userSignUp.userCpf ?? "",
-            personFullName: userSignUp.userName,
-            personBirth: new Date(userSignUp.userDate ?? ""),
+            userImage: userSignUp.userImage,
           });
 
           const person = await PersonService.registerPerson({

@@ -74,13 +74,16 @@ export default class UserService {
         const { userName, userEmail, userImage, token, isLogged } = response;
         if (isLogged) {
           localStorage.setItem("user", token);
+          sessionStorage.removeItem("mailSignUp");
+          sessionStorage.removeItem("google-user");
           toastService.addSuccessToast("Seja bem vindo!!");
         } else {
           sessionStorage.setItem("google-user", token);
-          if (locationBefore === "/login")
+          if (locationBefore === "/login") {
             toastService.addInfoToast("Usuário ainda não cadastrado.");
-          sessionStorage.removeItem("location");
+          }
         }
+        sessionStorage.removeItem("location");
         return { userName, userEmail, userImage, isLogged };
       })
       .catch(() => {

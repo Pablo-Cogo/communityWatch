@@ -62,8 +62,9 @@ const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = () => {
+    localStorage.removeItem("user");
     setUserLogged(null);
-    const from = window.location.pathname;
+    const from = "/";
     navigate(from);
   };
 

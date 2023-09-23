@@ -5,10 +5,10 @@ import {
   LogoContainer,
   Menu,
   MenuContainer,
-  User,
 } from "./style";
 import Logo from "../../../../assets/logo";
 import { Format } from "../../../../helpers/format";
+import CtasRender from "../../../molecules/ctas";
 
 const InternalHeader = () => {
   return (
@@ -18,8 +18,7 @@ const InternalHeader = () => {
       </LogoContainer>
       <MenuContainer>
         <Menu>
-          <p>Todos os recursos</p>
-          <User>EM</User>
+          <CtasRender />
         </Menu>
         <BreadCrumb>{Format.date.complete(new Date())}</BreadCrumb>
       </MenuContainer>

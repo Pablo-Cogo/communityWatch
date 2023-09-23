@@ -44,7 +44,7 @@ const MailSignUp = () => {
           userName: userSignUp.userName,
           userEmail: userSignUp.userEmail,
           userPassword: userSignUp.userPassword,
-          userImage: userSignUp.userEmail,
+          userImage: userSignUp.userImage,
           personPhone: userSignUp.personPhone,
           userCpf: userSignUp.userCpf,
           userDate: userSignUp.userDate,
