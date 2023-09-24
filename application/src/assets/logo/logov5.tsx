@@ -24,7 +24,7 @@ const Logo5 = ({ className }: LogoProps) => {
             strokeDashoffset: "0",
             strokeLinejoin: "miter",
             strokeMiterlimit: "4",
-            fill: "#000",
+            fill: "#111c3b",
             fillRule: "nonzero",
             opacity: "1",
             visibility: "hidden",
@@ -154,7 +154,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "nonzero",
                 opacity: "1",
               }}
@@ -174,7 +174,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "nonzero",
                 opacity: "1",
               }}
@@ -194,7 +194,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "nonzero",
                 opacity: "1",
               }}
@@ -214,7 +214,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "nonzero",
                 opacity: "1",
               }}
@@ -234,7 +234,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "nonzero",
                 opacity: "1",
               }}
@@ -254,7 +254,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "nonzero",
                 opacity: "1",
               }}
@@ -274,7 +274,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "nonzero",
                 opacity: "1",
               }}
@@ -294,7 +294,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "nonzero",
                 opacity: "1",
               }}
@@ -314,7 +314,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "nonzero",
                 opacity: "1",
               }}
@@ -334,7 +334,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "evenodd",
                 opacity: "1",
               }}
@@ -374,7 +374,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "evenodd",
                 opacity: "1",
               }}
@@ -414,7 +414,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "evenodd",
                 opacity: "1",
               }}
@@ -454,7 +454,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "evenodd",
                 opacity: "1",
               }}
@@ -494,7 +494,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "evenodd",
                 opacity: "1",
               }}
@@ -534,7 +534,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "evenodd",
                 opacity: "1",
               }}
@@ -574,7 +574,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "evenodd",
                 opacity: "1",
               }}
@@ -614,7 +614,7 @@ const Logo5 = ({ className }: LogoProps) => {
                 strokeDashoffset: "0",
                 strokeLinejoin: "miter",
                 strokeMiterlimit: "10",
-                fill: "#000",
+                fill: "#111c3b",
                 fillRule: "evenodd",
                 opacity: "1",
               }}

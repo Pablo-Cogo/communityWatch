@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const Ctas = styled.div`
-  position: relative;
   grid-area: ctas;
   display: -webkit-box;
   display: -webkit-flex;
@@ -26,7 +25,9 @@ export const Ctas = styled.div`
   }
 `;
 
-export const UserLoggedContainer = styled.div``;
+export const UserLoggedContainer = styled.div`
+  position: relative;
+`;
 
 export const UserNoImage = styled.div`
   background: #ffb972;
@@ -70,7 +71,7 @@ export const UserModelContainer = styled.div`
 export const UserModal = styled.div`
   min-width: 196px;
   position: relative;
-  margin-top: 8px;
+  padding-top: 8px;
 `;
 
 export const ListActionsUser = styled.ul`

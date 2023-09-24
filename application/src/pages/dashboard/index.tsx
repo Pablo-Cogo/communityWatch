@@ -1,8 +1,7 @@
 import React from "react";
-import InternalHeader from "../../components/organisms/header/internal";
 
 const Dashboard = () => {
-  return <InternalHeader />;
+  return <h2>teste</h2>;
 };
 
 export default Dashboard;

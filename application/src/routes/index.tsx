@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import Home from "../pages/home";
 import Login from "../pages/login";
 import PrivateRoute from "./private";
@@ -8,6 +8,9 @@ import AuthCallback from "../pages/login/callback";
 import SignUp from "../pages/signup";
 import MailSignUp from "../pages/signup/mail";
 import AddressSignUp from "../pages/signup/address";
+import { Container } from "../global.style";
+import SidebarMenu from "../components/organisms/menu";
+import InternalHeader from "../components/organisms/header/internal";
 
 const AppRouter = () => {
   return (
@@ -23,10 +26,18 @@ const AppRouter = () => {
           path="/adm"
           element={
             <PrivateRoute>
-              <Dashboard />
+              <Container>
+                <SidebarMenu />
+                <InternalHeader />
+                <Outlet />
+              </Container>
             </PrivateRoute>
           }
-        />
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="chat" element={<>aaa</>} />
+          <Route path="occurences" element={<>bbb</>} />
+        </Route>
         <Route
           path="*"
           element={

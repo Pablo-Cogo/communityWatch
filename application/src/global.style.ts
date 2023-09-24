@@ -176,10 +176,10 @@ export const Container = styled.div`
   grid-template-columns: 0fr repeat(3, 1fr);
   grid-template-rows: 0fr 3fr;
   grid-template-areas:
-    "title nav nav nav"
+    "logo nav nav nav"
     "sidebar main main main";
 
-  &.sidebarClose {
+  /* &.sidebarClose {
     grid-template-columns: 1fr;
     grid-template-areas: "nav" "main";
   }
@@ -188,15 +188,15 @@ export const Container = styled.div`
     transition: grid-template-areas 2s;
     grid-template-columns: 0fr 1fr;
     grid-template-rows: 0fr 3fr;
-    grid-template-areas: "title nav" "sidebar main";
+    grid-template-areas: "logo nav" "sidebar main";
   }
   @media only screen and (max-width: 589px) {
     grid-template-rows: 0fr 0fr 0fr 3fr !important;
-    grid-template-columns: 0fr !important;
-    grid-template-areas: "title" "nav" "links" "main" !important;
+    grid-template-columns: 1fr !important;
+    grid-template-areas: "logo" "nav" "links" "main" !important;
 
     &.sidebarClose {
       grid-template-columns: 1fr !important;
     }
-  }
+  } */
 `;
