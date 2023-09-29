@@ -27,7 +27,7 @@ const SidebarMenu = () => {
             </Icon>
             <Text open={openMenu}>Contatos</Text>
           </ItemMenu>
-          <ItemMenu as={Link} to={"/adm/occurences"} open={openMenu}>
+          <ItemMenu as={Link} to={"/adm/occurrences"} open={openMenu}>
             <Icon>
               <Book />
             </Icon>

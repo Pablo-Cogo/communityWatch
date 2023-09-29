@@ -11,6 +11,8 @@ import AddressSignUp from "../pages/signup/address";
 import { Container } from "../global.style";
 import SidebarMenu from "../components/organisms/menu";
 import InternalHeader from "../components/organisms/header/internal";
+import Occurrences from "../pages/occurrences";
+import Main from "../components/organisms/main";
 
 const AppRouter = () => {
   return (
@@ -29,14 +31,16 @@ const AppRouter = () => {
               <Container>
                 <SidebarMenu />
                 <InternalHeader />
-                <Outlet />
+                <Main>
+                  <Outlet />
+                </Main>
               </Container>
             </PrivateRoute>
           }
         >
           <Route index element={<Dashboard />} />
           <Route path="chat" element={<>aaa</>} />
-          <Route path="occurences" element={<>bbb</>} />
+          <Route path="occurrences" element={<Occurrences />} />
         </Route>
         <Route
           path="*"
