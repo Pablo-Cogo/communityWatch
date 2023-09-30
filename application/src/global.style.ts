@@ -32,6 +32,13 @@ export const GlobalStyle = createGlobalStyle`
       --separator: 219, 219, 219;
       --stroke: 219, 219, 219;
 
+      --checkbox-size: 13px;
+      --checkbox-border: rgb(237, 147, 65);
+      --checkbox-hover: #a5aaad;
+      --checkbox-checked: rgb(237, 147, 65);
+      --bg-checkbox: transparent;
+      --color-checkbox-filled-checked: #fff;
+
       --bg-toast: #fff;
       --color-success: green;
       --color-error: red;

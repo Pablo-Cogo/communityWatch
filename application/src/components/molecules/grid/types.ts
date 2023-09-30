@@ -31,6 +31,7 @@ export interface Column<T> {
   column: keyof T;
   width?: string;
   columnNotShow?: boolean;
+  showOnlySelector?: boolean;
   orderBy?: boolean;
   fix?: boolean | false;
 }

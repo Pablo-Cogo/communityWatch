@@ -45,7 +45,7 @@ const Occurrences = () => {
     {
       name: "Código",
       column: "Id",
-      columnNotShow: true,
+      showOnlySelector: true,
     },
     {
       name: "Cobrade",
