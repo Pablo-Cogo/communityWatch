@@ -36,10 +36,10 @@ const ColumnSelectorRender = ({ gridId }: ColumnsSelectorProps) => {
   const {
     changeSelectorColumns,
     filterColumnSelector,
+    changeColumnsBySelector,
     stateColumnSelector,
     columnsSelector,
   } = useColumnSelectorContext();
-
   useEffect(() => {
     filterColumnSelector();
     draggable(gridId + "_colums-selector", ".popup-title");
@@ -96,7 +96,7 @@ const ColumnSelectorRender = ({ gridId }: ColumnsSelectorProps) => {
                     tabIndex={0}
                     className="border-box"
                     checked={col.show}
-                    // onChange={(e) => filterColumns(e)}
+                    onChange={() => changeColumnsBySelector(col.column)}
                     style={{
                       transform: "scale(1.5)",
                       background: "transparent",

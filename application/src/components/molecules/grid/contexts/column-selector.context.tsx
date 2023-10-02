@@ -1,15 +1,16 @@
 import { createContext, useContext, useState } from "react";
 import { Column } from "../types";
 import { ColumnsSelectorType } from "../components/columnSelector/types";
+import { useColumnFilterContext } from "./columns.context";
 
 interface ColumnSelectorContextType<T> {
   stateColumnSelector: boolean;
   columnsSelector?: ColumnsSelectorType<T>[];
   changeSelectorColumns: () => void;
   filterColumnSelector: () => void;
+  changeColumnsBySelector: (columnKey: keyof T) => void;
 }
 
-// Use createContext com o tipo genérico
 const ColumnSelectorContext = createContext<
   ColumnSelectorContextType<any> | undefined
 >(undefined);
@@ -19,14 +20,15 @@ interface ColumnSelectorProviderProps<T> {
   columns?: Column<T>[];
 }
 
-const ColumnSelectorProvider: React.FC<ColumnSelectorProviderProps<any>> = ({
+const ColumnSelectorProvider = <T extends Record<string, any>>({
   children,
   columns,
-}) => {
+}: ColumnSelectorProviderProps<T>) => {
+  const { filterColumns } = useColumnFilterContext();
   const [stateColumnSelector, setStateColumnSelector] =
     useState<boolean>(false);
   const [columnsSelector, setColumnsSelector] = useState<
-    ColumnsSelectorType<any>[]
+    ColumnsSelectorType<T>[]
   >([]);
 
   const changeSelectorColumns = () => {
@@ -35,7 +37,7 @@ const ColumnSelectorProvider: React.FC<ColumnSelectorProviderProps<any>> = ({
 
   const filterColumnSelector = () => {
     if (columns) {
-      const colsSelector: ColumnsSelectorType<any>[] = [];
+      const colsSelector: ColumnsSelectorType<T>[] = [];
       for (let i = 0; i < columns.length; i++) {
         if (!columns[i].columnNotShow) {
           colsSelector.push({
@@ -49,11 +51,27 @@ const ColumnSelectorProvider: React.FC<ColumnSelectorProviderProps<any>> = ({
     }
   };
 
-  const contextValue: ColumnSelectorContextType<any> = {
+  const changeColumnsBySelector = (columnKey: keyof T) => {
+    const updatedColumns = columnsSelector.map((col) => {
+      if (col.column === columnKey) {
+        return {
+          ...col,
+          show: !col.show,
+        };
+      }
+      return col;
+    });
+    if (updatedColumns.filter((col) => col.show).length === 0) return;
+    filterColumns(columnKey.toString());
+    setColumnsSelector(updatedColumns);
+  };
+
+  const contextValue: ColumnSelectorContextType<T> = {
     stateColumnSelector,
     columnsSelector,
     changeSelectorColumns,
     filterColumnSelector,
+    changeColumnsBySelector,
   };
 
   return (
