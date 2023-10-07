@@ -21,13 +21,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ActionButton, BorderTd } from "../../style";
 import ColumnSelectorRender from "../columnSelector";
+import { useRowsContext } from "../../contexts/rows.context";
 
 function BodyGrid<T extends Record<string, any>>({
   gridId,
   configGrid,
   configButtonsGrid,
+  rows,
 }: BodyGridProps<T>) {
   const { filteredColumns, filteredRows } = useColumnFilterContext();
+  const { selectRow, removeSelectRow, checkAllRows, idsSelected } =
+    useRowsContext();
 
   return (
     <DataGrid id={gridId}>
@@ -84,14 +88,14 @@ function BodyGrid<T extends Record<string, any>>({
                       name="checkbox"
                       tabIndex={0}
                       className="border-box"
-                      // data-checked={
-                      //   idsSelected?.length > 0 &&
-                      //   rowsClone?.length !== idsSelected?.length
-                      //     ? "mixed"
-                      //     : null
-                      // }
-                      // onChange={(e) => checkAllRows(e)}
-                      // checked={rowsClone?.length === idsSelected?.length}
+                      data-checked={
+                        idsSelected?.length > 0 &&
+                        rows?.length !== idsSelected?.length
+                          ? "mixed"
+                          : null
+                      }
+                      onChange={(e) => checkAllRows(e, configGrid.colPrimary)}
+                      checked={rows?.length === idsSelected?.length}
                       style={{
                         margin: "auto",
                         background: "transparent",
@@ -227,34 +231,32 @@ function BodyGrid<T extends Record<string, any>>({
                         {configGrid?.buttonCommandSelect !== false ? (
                           <td
                             className="command-select fix"
-                            // onClick={() =>
-                            //   changeCheckboxByRow(
-                            //     rowsClone[index][configGrid?.colPrimary]
-                            //   )
-                            // }
+                            onClick={() =>
+                              rows &&
+                              selectRow(rows[index][configGrid.colPrimary])
+                            }
                           >
                             <Checkbox
-                              aria-label="Select all"
+                              aria-label="Select row"
                               role="checkbox"
                               type="checkbox"
                               name={"checkbox_" + index}
                               tabIndex={0}
                               className="border-box"
-                              // onChange={(e) =>
-                              //   changeCheckboxRow(
-                              //     e,
-                              //     rowsClone[index][configGrid?.colPrimary]
-                              //   )
-                              // }
-                              // checked={
-                              //   idsSelected
-                              //     ? idsSelected.indexOf(
-                              //         rowsClone[index][
-                              //           configGrid?.colPrimary
-                              //         ]
-                              //       ) !== -1
-                              //     : false
-                              // }
+                              onChange={(e) =>
+                                rows &&
+                                removeSelectRow(
+                                  e,
+                                  rows[index][configGrid.colPrimary]
+                                )
+                              }
+                              checked={
+                                idsSelected
+                                  ? idsSelected.indexOf(
+                                      rows && rows[index][configGrid.colPrimary]
+                                    ) !== -1
+                                  : false
+                              }
                               style={{
                                 margin: "auto",
                                 background: "transparent",

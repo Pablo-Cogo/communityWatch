@@ -14,16 +14,16 @@ export interface GridButtonProps {
   inToolbar?: boolean;
   icon?: IconDefinition;
   inMoreActions?: boolean;
-  action: (id: number) => void;
+  action: (id: string | string[]) => void;
 }
 
 export interface ConfigGridProps {
+  colPrimary: string;
   buttonRestore: boolean | true;
   buttonColumnSelector: boolean | true;
   buttonCommandSelect: boolean | true;
   buttonsDownload: boolean | true;
   colCommands: boolean | true;
-  colPrimary: string | true;
 }
 
 export interface Column<T> {

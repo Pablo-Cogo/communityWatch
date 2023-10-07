@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 import { Column } from "../types";
 
 interface ColumnFilterContextType<T> {
@@ -42,9 +42,6 @@ const ColumnFilterProvider = <T extends Record<string, any>>({
       return filteredRow;
     })
   );
-
-  console.log(filteredColumns);
-  console.log(filteredRows);
 
   function filterLinesByColumn(
     columnNotShow: keyof T | null,
@@ -115,13 +112,9 @@ const ColumnFilterProvider = <T extends Record<string, any>>({
       keysLines = Object.keys(lines[j]);
     }
 
-    console.log(keysLines);
-
     let filterLines = keysLines.filter(
       (keyLines) => !keysRows.some((x) => x === keyLines) && keyLines !== colAdd
     );
-
-    console.log(filterLines);
 
     let filterColumns = cols.filter(
       (col) =>
@@ -160,9 +153,6 @@ const ColumnFilterProvider = <T extends Record<string, any>>({
       filterLinesByColumn(null, cols, lines, rowsGrid);
     }
 
-    console.log(rowsGrid);
-    console.log(colsGrid);
-
     setFilteredColumns(colsGrid);
     setFilteredRows(rowsGrid);
   };
@@ -183,70 +173,12 @@ const ColumnFilterProvider = <T extends Record<string, any>>({
         filteredRows,
         columnsAndLines
       );
-      console.log("aq", columnsAndLines.columns);
 
       setFilteredColumns(columnsAndLines.columns);
       setFilteredRows(columnsAndLines.rows);
     } else {
       restoreColumnByFilter(columnKey);
-      //   filterColumnsAndLines(null, columns, rows, columnsAndLines);
     }
-
-    // for (let i = 0; i < columns.length; i++) {
-    //   if (columns[i].showOnlySelector || columns[i].columnNotShow) {
-    //   } else {
-    //     filterColumnsAndLines(null, columns, rows, columnsAndLines);
-    //   }
-    // }
-
-    //   const updatedColumns = filteredColumns?.filter(
-    //     (col) => col.column !== columnKey
-    //   );
-    //   setFilteredColumns(updatedColumns);
-
-    //   if (filteredRows) {
-    //     const updatedRows = filteredRows.map((row) => {
-    //       const newRow = { ...row };
-    //       delete newRow[columnKey];
-    //       return newRow;
-    //     });
-    //     setFilteredRows(updatedRows);
-    //   }
-    // } else {
-    //   const originalIndex = columns?.findIndex(
-    //     (col) => col.column === columnKey
-    //   );
-
-    //   if (originalIndex !== undefined && originalIndex !== -1) {
-    //     if (!columns) return;
-    //     const newColumn = columns[originalIndex];
-    //     setFilteredColumns((prevColumns) => {
-    //       const newColumns = [...(prevColumns || [])];
-    //       newColumns.splice(originalIndex, 0, newColumn);
-    //       return newColumns;
-    //     });
-
-    // const originalIndexRow = rows?.map((row) => {
-    //   const keys = Object.keys(row);
-    //   return keys.findIndex((key) => key === columnKey);
-    // });
-
-    // columns?.findIndex((col) => col.column === columnKey);
-
-    // if (filteredRows) {
-    //   const updatedRows = filteredRows.map((row) => {
-    //     const newRow = { ...row };
-    //     const a = rows?.find((r) => true)?.[columnKey];
-    //     console.log(a);
-    //     if (a) {
-    //       newRow[columnKey] = a; // Use o valor original da linha se estiver disponível
-    //     }
-    //     return newRow;
-    //   });
-    //   setFilteredRows(updatedRows);
-    // }
-    //   }
-    // }
   };
 
   const contextValue: ColumnFilterContextType<T> = {

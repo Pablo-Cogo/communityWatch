@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { ColumnSelectorProvider } from "./column-selector.context";
 import { Column } from "../types"; // Certifique-se de importar o tipo correto aqui
 import { ColumnFilterProvider } from "./columns.context";
+import { RowsProvider } from "./rows.context";
 
 interface GridProviderProps<T> {
   children: ReactNode;
@@ -17,7 +18,7 @@ const GridProvider = <T extends Record<string, any>>({
   return (
     <ColumnFilterProvider columns={columns} rows={rows}>
       <ColumnSelectorProvider columns={columns}>
-        {children}
+        <RowsProvider rows={rows}>{children}</RowsProvider>
       </ColumnSelectorProvider>
     </ColumnFilterProvider>
   );

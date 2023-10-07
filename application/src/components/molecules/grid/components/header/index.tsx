@@ -21,6 +21,7 @@ import {
 import { HeaderGridProps } from "./types";
 import { activeButton, desactiveButton } from "../../utils";
 import { useColumnSelectorContext } from "../../contexts/column-selector.context";
+import { useRowsContext } from "../../contexts/rows.context";
 
 const HeaderGrid = ({
   gridId,
@@ -28,6 +29,7 @@ const HeaderGrid = ({
   configGrid,
 }: HeaderGridProps) => {
   const { changeSelectorColumns } = useColumnSelectorContext();
+  const { idsSelected } = useRowsContext();
   return (
     <HeaderPainel>
       <Toolbar
@@ -56,11 +58,11 @@ const HeaderGrid = ({
                     id={gridId + "_button_" + (index + 1)}
                   >
                     <ButtonToolbarContent
-                      // onClick={() =>
-                      //   button.action
-                      //     ? button.action(idsSelected)
-                      //     : alert(`este botão está sem ação`)
-                      // }
+                      onClick={() =>
+                        button.action
+                          ? button.action(idsSelected)
+                          : alert(`este botão está sem ação`)
+                      }
                       title={button.title && !button.text ? button.title : ""}
                       aria-label={
                         button.title && !button.text ? button.title : ""

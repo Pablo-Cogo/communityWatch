@@ -11,7 +11,7 @@ import {
   InfoPages,
   Widget,
 } from "./style";
-import { GridProps } from "./types";
+import { ConfigGridProps, GridProps } from "./types";
 import HeaderGrid from "./components/header";
 import GridProvider from "./contexts/grid.context";
 import BodyGrid from "./components/body";
@@ -24,6 +24,14 @@ function Grid<T extends Record<string, any>>({
   rows,
 }: GridProps<T>) {
   const [configButtonsGrid] = useState(gridButtonProps);
+  const [configGridDefault] = useState<ConfigGridProps>({
+    buttonColumnSelector: true,
+    buttonCommandSelect: true,
+    buttonRestore: true,
+    buttonsDownload: true,
+    colCommands: true,
+    colPrimary: configGrid?.colPrimary ?? "Id",
+  });
 
   return (
     <GridProvider columns={columns} rows={rows}>
@@ -35,7 +43,7 @@ function Grid<T extends Record<string, any>>({
         />
         <BodyGrid
           gridId={gridId}
-          configGrid={configGrid}
+          configGrid={configGrid ?? configGridDefault}
           configButtonsGrid={configButtonsGrid}
           rows={rows}
         />
