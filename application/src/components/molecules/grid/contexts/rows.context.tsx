@@ -1,6 +1,8 @@
 import { createContext, useContext, ReactNode, useState } from "react";
+import { usePaginateContext } from "./paginate.context";
 
-interface RowsContextType {
+interface RowsContextType<T> {
+  changeRows: (colSort?: keyof T, asc?: boolean) => T[] | undefined;
   selectRow: (id: string) => void;
   checkAllRows: (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -10,7 +12,7 @@ interface RowsContextType {
   idsSelected: string[];
 }
 
-const RowsContext = createContext<RowsContextType | undefined>(undefined);
+const RowsContext = createContext<RowsContextType<any> | undefined>(undefined);
 
 interface RowsProviderProps<T> {
   children: ReactNode;
@@ -22,7 +24,58 @@ const RowsProvider = <T extends Record<string, any>>({
   rows,
 }: RowsProviderProps<T>) => {
   const [idsSelected, setIdsSelected] = useState<string[]>([]);
-  console.log(idsSelected);
+
+  const { atualPage, atualPageSize } = usePaginateContext();
+
+  const changeRows = (colSort?: keyof T, asc?: boolean) => {
+    if (colSort && asc !== undefined) {
+      const rowsOrdered = orderRows(colSort, asc);
+      // setRowsWithAllColumns(rowsOrdered);
+      return rowsOrdered;
+    }
+    return rows;
+  };
+
+  const orderRows = (colSort: keyof T, asc: boolean) => {
+    var linesClone = JSON.parse(JSON.stringify(rows)) as T[];
+    linesClone = linesClone.sort((a, b) => {
+      if (colSort) {
+        const valueA = a[colSort];
+        const valueB = b[colSort];
+
+        const splitString = (str: string) => {
+          return str.match(/(\d+|\D+)/g) || [];
+        };
+
+        const partsA = splitString(valueA);
+        const partsB = splitString(valueB);
+
+        for (let i = 0; i < Math.min(partsA.length, partsB.length); i++) {
+          const partA = partsA[i];
+          const partB = partsB[i];
+
+          if (!isNaN(Number(partA)) && !isNaN(Number(partB))) {
+            const numA = Number(partA);
+            const numB = Number(partB);
+            if (numA !== numB) {
+              return asc ? numA - numB : numB - numA;
+            }
+          } else {
+            if (partA !== partB) {
+              return asc
+                ? partA.localeCompare(partB)
+                : partB.localeCompare(partA);
+            }
+          }
+        }
+        return asc
+          ? valueA.length - valueB.length
+          : valueB.length - valueA.length;
+      }
+      return 0;
+    });
+    return linesClone;
+  };
 
   const selectRow = (id: string) => {
     if (idsSelected) {
@@ -66,7 +119,8 @@ const RowsProvider = <T extends Record<string, any>>({
     }
   };
 
-  const contextValue: RowsContextType = {
+  const contextValue: RowsContextType<T> = {
+    changeRows,
     selectRow,
     checkAllRows,
     removeSelectRow,
@@ -78,8 +132,8 @@ const RowsProvider = <T extends Record<string, any>>({
   );
 };
 
-const useRowsContext = () => {
-  const context = useContext(RowsContext) as RowsContextType | undefined;
+const useRowsContext = <T extends Record<string, any>>() => {
+  const context = useContext(RowsContext) as RowsContextType<T> | undefined;
   if (context === undefined) {
     throw new Error("useRowsContext must be used within a RowsProvider");
   }

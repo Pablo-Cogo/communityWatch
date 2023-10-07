@@ -19,11 +19,11 @@ export interface GridButtonProps {
 
 export interface ConfigGridProps {
   colPrimary: string;
-  buttonRestore: boolean | true;
-  buttonColumnSelector: boolean | true;
-  buttonCommandSelect: boolean | true;
-  buttonsDownload: boolean | true;
-  colCommands: boolean | true;
+  buttonRestore?: boolean;
+  buttonColumnSelector?: boolean;
+  buttonCommandSelect?: boolean;
+  buttonsDownload?: boolean;
+  colCommands?: boolean;
 }
 
 export interface Column<T> {

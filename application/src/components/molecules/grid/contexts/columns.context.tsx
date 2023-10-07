@@ -1,10 +1,19 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { Column } from "../types";
+import { useRowsContext } from "./rows.context";
 
 interface ColumnFilterContextType<T> {
   filteredColumns: Column<T>[];
   filterColumns: (columnKey: keyof T) => void;
   filteredRows: T[];
+  orderColumns: (e: any) => void;
+  columnSort: SortProps<T>;
 }
 
 const ColumnFilterContext = createContext<
@@ -14,7 +23,6 @@ const ColumnFilterContext = createContext<
 interface ColumnFilterProviderProps<T> {
   children: ReactNode;
   columns?: Column<T>[];
-  rows?: T[];
 }
 
 interface ColumnsAndLinesProps<T> {
@@ -22,14 +30,49 @@ interface ColumnsAndLinesProps<T> {
   rows?: T[];
 }
 
+interface SortProps<T> {
+  column?: keyof T;
+  asc?: boolean;
+}
+
 const ColumnFilterProvider = <T extends Record<string, any>>({
   children,
   columns,
-  rows,
 }: ColumnFilterProviderProps<T>) => {
   const [filteredColumns, setFilteredColumns] = useState<
     Column<T>[] | undefined
   >(columns?.filter((col) => !col.columnNotShow && !col.showOnlySelector));
+
+  const { changeRows } = useRowsContext<T>();
+
+  const [columnSort, setColumnSort] = useState<SortProps<T>>({
+    column: columns?.filter((col) => col.orderBy !== undefined)[0]?.column,
+    asc: columns?.filter((col) => col.orderBy !== undefined)[0]?.orderBy,
+  });
+
+  const [rows, setRows] = useState<T[]>(
+    changeRows(columnSort.column, columnSort.asc) ?? []
+  );
+
+  useEffect(() => {
+    console.log(columnSort.asc);
+    setRows(changeRows(columnSort.column, columnSort.asc) ?? []);
+  }, [changeRows, columnSort.asc, columnSort.column]);
+
+  console.log(rows);
+  useEffect(() => {
+    setFilteredRows(
+      rows?.map((row) => {
+        const filteredRow: T = { ...row };
+        columns?.forEach((col) => {
+          if (col.columnNotShow || col.showOnlySelector) {
+            delete filteredRow[col.column];
+          }
+        });
+        return filteredRow;
+      })
+    );
+  }, [columns, rows]);
 
   const [filteredRows, setFilteredRows] = useState<T[] | undefined>(
     rows?.map((row) => {
@@ -42,6 +85,39 @@ const ColumnFilterProvider = <T extends Record<string, any>>({
       return filteredRow;
     })
   );
+
+  function orderColumns(e: any) {
+    filteredColumns?.forEach((elem) => {
+      if (e.target.id === elem.column) {
+        setColumnSort({
+          column: elem.column,
+          asc: !columnSort?.asc,
+        });
+      }
+    });
+
+    var cols = filteredColumns?.map((elem) => {
+      if (e.target.id === elem.column) {
+        if (elem.orderBy) {
+          return {
+            ...elem,
+            orderBy: false,
+          };
+        } else {
+          return {
+            ...elem,
+            orderBy: true,
+          };
+        }
+      } else {
+        return {
+          ...elem,
+          orderBy: undefined,
+        };
+      }
+    });
+    setFilteredColumns(cols);
+  }
 
   function filterLinesByColumn(
     columnNotShow: keyof T | null,
@@ -127,16 +203,17 @@ const ColumnFilterProvider = <T extends Record<string, any>>({
     );
 
     for (let i = 0; i < cols.length; i++) {
-      //   if (columnSort?.column === cols[i].column) {
-      //     colsGrid.push({
-      //         ...cols[i],
-      //         orderBy: !!columnSort?.asc,
-      //       });
-      //   } else {
-      colsGrid.push({
-        ...cols[i],
-        orderBy: undefined,
-      });
+      if (columnSort?.column === cols[i].column) {
+        colsGrid.push({
+          ...cols[i],
+          orderBy: !!columnSort?.asc,
+        });
+      } else {
+        colsGrid.push({
+          ...cols[i],
+          orderBy: undefined,
+        });
+      }
     }
 
     if (filterLines.length > 0) {
@@ -185,6 +262,8 @@ const ColumnFilterProvider = <T extends Record<string, any>>({
     filteredColumns: filteredColumns || [],
     filterColumns,
     filteredRows: filteredRows || [],
+    orderColumns,
+    columnSort,
   };
 
   return (

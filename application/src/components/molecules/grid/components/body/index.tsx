@@ -29,7 +29,8 @@ function BodyGrid<T extends Record<string, any>>({
   configButtonsGrid,
   rows,
 }: BodyGridProps<T>) {
-  const { filteredColumns, filteredRows } = useColumnFilterContext();
+  const { filteredColumns, filteredRows, orderColumns } =
+    useColumnFilterContext();
   const { selectRow, removeSelectRow, checkAllRows, idsSelected } =
     useRowsContext();
 
@@ -127,7 +128,7 @@ function BodyGrid<T extends Record<string, any>>({
                               style={{ width: "100%" }}
                               className="content_td"
                               id={elem.column.toString()}
-                              // onClick={(e) => orderRowsView(e)}
+                              onClick={(e) => orderColumns(e)}
                             >
                               {elem.name}
                             </TextGridContent>

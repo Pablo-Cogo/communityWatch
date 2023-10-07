@@ -45,7 +45,8 @@ const Occurrences = () => {
     {
       name: "Código",
       column: "Id",
-      showOnlySelector: true,
+      // showOnlySelector: true,
+      orderBy: false,
     },
     {
       name: "Cobrade",
@@ -59,17 +60,112 @@ const Occurrences = () => {
 
   const RowsData: Occurrence[] = [
     {
-      Id: "1",
-      Cobrade: "123",
-      Nome: "abc",
-    },
-    {
       Id: "2",
+      Cobrade: "0710",
+      Nome: "çéservé",
+    },
+    {
+      Id: "4",
+      Cobrade: "12,50",
+      Nome: "communiqué",
+    },
+    {
+      Id: "5",
+      Cobrade: "123,0",
+      Nome: "café",
+    },
+    {
+      Id: "6",
+      Cobrade: "123",
+      Nome: "ádieu",
+    },
+    {
+      Id: "7",
       Cobrade: "123",
       Nome: "abc",
     },
     {
-      Id: "3",
+      Id: "8",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "9",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "10",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "11",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "12",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "13",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "14",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "15",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "16",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "17",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "18",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "19",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "20",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "21",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "22",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "23",
+      Cobrade: "123",
+      Nome: "abc",
+    },
+    {
+      Id: "24",
       Cobrade: "123",
       Nome: "abc",
     },
