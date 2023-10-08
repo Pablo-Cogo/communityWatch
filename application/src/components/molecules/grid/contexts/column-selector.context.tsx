@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { Column } from "../types";
 import { ColumnsSelectorType } from "../components/columnSelector/types";
-import { useColumnFilterContext } from "./columns.context";
+import useFilterRowsAndColumns from "../hooks/filterRowsAndColumns.hook";
 
 interface ColumnSelectorContextType<T> {
   stateColumnSelector: boolean;
@@ -24,7 +24,7 @@ const ColumnSelectorProvider = <T extends Record<string, any>>({
   children,
   columns,
 }: ColumnSelectorProviderProps<T>) => {
-  const { filterColumns } = useColumnFilterContext();
+  const { filterRowsAndColumns } = useFilterRowsAndColumns<T>();
   const [stateColumnSelector, setStateColumnSelector] =
     useState<boolean>(false);
   const [columnsSelector, setColumnsSelector] = useState<
@@ -62,7 +62,7 @@ const ColumnSelectorProvider = <T extends Record<string, any>>({
       return col;
     });
     if (updatedColumns.filter((col) => col.show).length === 0) return;
-    filterColumns(columnKey.toString());
+    filterRowsAndColumns(columnKey.toString());
     setColumnsSelector(updatedColumns);
   };
 

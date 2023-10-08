@@ -8,7 +8,7 @@ import {
 } from "./style";
 import { ConfigGridProps, GridProps } from "./types";
 import HeaderGrid from "./components/header";
-import GridProvider from "./contexts/grid.context";
+import GridProvider from "./contexts/grid.provider";
 import BodyGrid from "./components/body";
 import FooterGrid from "./components/footer";
 

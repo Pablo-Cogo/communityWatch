@@ -22,6 +22,7 @@ import {
 import { ActionButton, BorderTd } from "../../style";
 import ColumnSelectorRender from "../columnSelector";
 import { useRowsContext } from "../../contexts/rows.context";
+import useFilterRowsAndColumns from "../../hooks/filterRowsAndColumns.hook";
 
 function BodyGrid<T extends Record<string, any>>({
   gridId,
@@ -29,9 +30,9 @@ function BodyGrid<T extends Record<string, any>>({
   configButtonsGrid,
   rows,
 }: BodyGridProps<T>) {
-  const { filteredColumns, filteredRows, orderColumns } =
-    useColumnFilterContext();
-  const { selectRow, removeSelectRow, checkAllRows, idsSelected } =
+  const { filteredColumns } = useColumnFilterContext();
+  const { orderRowsAndColumns } = useFilterRowsAndColumns();
+  const { selectRow, removeSelectRow, checkAllRows, idsSelected, rowsGrid } =
     useRowsContext();
 
   return (
@@ -128,7 +129,7 @@ function BodyGrid<T extends Record<string, any>>({
                               style={{ width: "100%" }}
                               className="content_td"
                               id={elem.column.toString()}
-                              onClick={(e) => orderColumns(e)}
+                              onClick={(e) => orderRowsAndColumns(elem.column)}
                             >
                               {elem.name}
                             </TextGridContent>
@@ -166,7 +167,7 @@ function BodyGrid<T extends Record<string, any>>({
               </div>
             )} */}
           {/* <Suspense> */}
-          {filteredRows && filteredRows?.length > 0 ? (
+          {rowsGrid && rowsGrid?.length > 0 ? (
             <DataGridContentBody role="presentation">
               {/* {loading && setLoading(false)} */}
               <TableGrid role="presentation">
@@ -215,7 +216,7 @@ function BodyGrid<T extends Record<string, any>>({
                   ) : null}
                 </colgroup>
                 <tbody role="presentation">
-                  {filteredRows.map((elem, index) => {
+                  {rowsGrid.map((elem, index) => {
                     return (
                       <tr
                         key={gridId + "_row_" + index}
@@ -265,25 +266,23 @@ function BodyGrid<T extends Record<string, any>>({
                             />
                           </td>
                         ) : null}
-                        {Object.values(filteredRows[index]).map(
-                          (elem2, index2) => {
-                            return (
-                              <td
-                                key={"col_" + index2}
-                                title={elem2}
-                                data-column={index2}
-                                className={elem.fix ? "fix" : ""}
-                                // onClick={() =>
-                                //   changeCheckboxByRow(
-                                //     rowsClone[index][configGrid?.colPrimary]
-                                //   )
-                                // }
-                              >
-                                <TextGridContent>{elem2}</TextGridContent>
-                              </td>
-                            );
-                          }
-                        )}
+                        {Object.values(rowsGrid[index]).map((elem2, index2) => {
+                          return (
+                            <td
+                              key={"col_" + index2}
+                              title={elem2}
+                              data-column={index2}
+                              className={elem.fix ? "fix" : ""}
+                              // onClick={() =>
+                              //   changeCheckboxByRow(
+                              //     rowsClone[index][configGrid?.colPrimary]
+                              //   )
+                              // }
+                            >
+                              <TextGridContent>{elem2}</TextGridContent>
+                            </td>
+                          );
+                        })}
                         {configGrid?.colCommands !== false &&
                         configButtonsGrid?.some((elem) => !elem.inToolbar) ? (
                           <td className="command-edit fix">
@@ -388,7 +387,7 @@ function BodyGrid<T extends Record<string, any>>({
                 </tbody>
               </TableGrid>
             </DataGridContentBody>
-          ) : filteredRows?.length === 0 ? (
+          ) : rowsGrid?.length === 0 ? (
             <DataGridContentBody role="presentation">
               {/* {loading && setLoading(false)} */}
               <TableGrid as="div" role="presentation">

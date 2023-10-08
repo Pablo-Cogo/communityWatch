@@ -1,8 +1,9 @@
-import { createContext, useContext, ReactNode, useState } from "react";
-import { usePaginateContext } from "./paginate.context";
+import { createContext, ReactNode, useContext, useState } from "react";
+import { SortProps, useColumnFilterContext } from "./columns.context";
+import { Column } from "../types";
 
 interface RowsContextType<T> {
-  changeRows: (colSort?: keyof T, asc?: boolean) => T[] | undefined;
+  filterRows: (columns: Column<T>[], colSort?: SortProps<T>) => void;
   selectRow: (id: string) => void;
   checkAllRows: (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -10,6 +11,7 @@ interface RowsContextType<T> {
   ) => void;
   removeSelectRow: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
   idsSelected: string[];
+  rowsGrid: T[] | undefined;
 }
 
 const RowsContext = createContext<RowsContextType<any> | undefined>(undefined);
@@ -23,23 +25,16 @@ const RowsProvider = <T extends Record<string, any>>({
   children,
   rows,
 }: RowsProviderProps<T>) => {
+  const { columnSort, filteredColumns } = useColumnFilterContext();
+
   const [idsSelected, setIdsSelected] = useState<string[]>([]);
+  const [rowsWithAllColumns, setRowsWithAllColumns] = useState<T[]>([]); //linhas sem o filtro das colunas - com orderby e paginate
+  const [rowsWithAllRows, setRowsWithAllRows] = useState<T[]>([]); //linhas sem paginação - com orderby
 
-  const { atualPage, atualPageSize } = usePaginateContext();
-
-  const changeRows = (colSort?: keyof T, asc?: boolean) => {
-    if (colSort && asc !== undefined) {
-      const rowsOrdered = orderRows(colSort, asc);
-      // setRowsWithAllColumns(rowsOrdered);
-      return rowsOrdered;
-    }
-    return rows;
-  };
-
-  const orderRows = (colSort: keyof T, asc: boolean) => {
+  const orderRowsDefault = (colSort?: keyof T, asc?: boolean) => {
     var linesClone = JSON.parse(JSON.stringify(rows)) as T[];
     linesClone = linesClone.sort((a, b) => {
-      if (colSort) {
+      if (colSort && asc !== undefined) {
         const valueA = a[colSort];
         const valueB = b[colSort];
 
@@ -75,6 +70,47 @@ const RowsProvider = <T extends Record<string, any>>({
       return 0;
     });
     return linesClone;
+  };
+
+  const removeColumn = (rows: T[], columns: Column<T>[]) => {
+    if (!columns) return;
+
+    const columnsRemaining = columns.map((col) => col.column);
+
+    const updatedRowsGrid = rows.map((row) => {
+      const newRow: Partial<T> = {};
+      for (const colKey of columnsRemaining) {
+        if (row.hasOwnProperty(colKey)) {
+          newRow[colKey as keyof T] = row[colKey];
+        }
+      }
+      return newRow as T;
+    });
+
+    return updatedRowsGrid;
+  };
+
+  const filterRowsDefault = (
+    columns: Column<T>[] = filteredColumns,
+    colSort: SortProps<T> = columnSort
+  ) => {
+    const rowsOrdered =
+      colSort.column && colSort.asc !== undefined
+        ? orderRowsDefault(colSort.column, colSort.asc)
+        : rows ?? [];
+    setRowsWithAllRows(rowsOrdered);
+    const rowsWithoutColumns = removeColumn(rowsOrdered, columns);
+    return rowsWithoutColumns ?? [];
+  };
+
+  const [rowsGrid, setRowsGrid] = useState<T[]>(() => filterRowsDefault()); //linhas finais da grid - com orderby, paginate e filteredColumns
+
+  const filterRows = (
+    columns: Column<T>[],
+    colSort: SortProps<T> = columnSort
+  ) => {
+    const rowsFiltered = filterRowsDefault(columns, colSort);
+    setRowsGrid(rowsFiltered);
   };
 
   const selectRow = (id: string) => {
@@ -120,11 +156,12 @@ const RowsProvider = <T extends Record<string, any>>({
   };
 
   const contextValue: RowsContextType<T> = {
-    changeRows,
+    filterRows,
     selectRow,
     checkAllRows,
     removeSelectRow,
     idsSelected,
+    rowsGrid,
   };
 
   return (

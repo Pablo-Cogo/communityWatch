@@ -17,15 +17,15 @@ const GridProvider = <T extends Record<string, any>>({
   rows,
 }: GridProviderProps<T>) => {
   return (
-    <PaginateProvider>
-      <RowsProvider rows={rows}>
-        <ColumnFilterProvider columns={columns}>
+    <ColumnFilterProvider columns={columns}>
+      <PaginateProvider>
+        <RowsProvider rows={rows}>
           <ColumnSelectorProvider columns={columns}>
             {children}
           </ColumnSelectorProvider>
-        </ColumnFilterProvider>
-      </RowsProvider>
-    </PaginateProvider>
+        </RowsProvider>
+      </PaginateProvider>
+    </ColumnFilterProvider>
   );
 };
 
