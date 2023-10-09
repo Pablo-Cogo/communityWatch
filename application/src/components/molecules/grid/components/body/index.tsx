@@ -160,253 +160,243 @@ function BodyGrid<T extends Record<string, any>>({
             </tbody>
           </TableGrid>
         </DataGridContent>
-        <DataGridBody role="presentation">
-          {/* {loading && (
+      </DatagridHeader>
+      <DataGridBody role="presentation">
+        {/* {loading && (
               <div style={{ padding: "20px" }}>
                 <Load />
               </div>
             )} */}
-          {/* <Suspense> */}
-          {rowsGrid && rowsGrid?.length > 0 ? (
-            <DataGridContentBody role="presentation">
-              {/* {loading && setLoading(false)} */}
-              <TableGrid role="presentation">
-                <colgroup>
-                  {configGrid?.buttonCommandSelect !== false ? (
-                    <col style={{ width: "70px" }} />
-                  ) : null}
-                  {filteredColumns
-                    ? filteredColumns.map((elem, index) => {
-                        return (
-                          <col
-                            key={"col_" + index}
-                            data-column={index}
-                            style={
-                              elem.width
-                                ? { width: elem.width }
-                                : { width: "auto" }
+        {/* <Suspense> */}
+        {rowsGrid && rowsGrid?.length > 0 ? (
+          <DataGridContentBody role="presentation">
+            {/* {loading && setLoading(false)} */}
+            <TableGrid role="presentation">
+              <colgroup>
+                {configGrid?.buttonCommandSelect !== false ? (
+                  <col style={{ width: "70px" }} />
+                ) : null}
+                {filteredColumns
+                  ? filteredColumns.map((elem, index) => {
+                      return (
+                        <col
+                          key={"col_" + index}
+                          data-column={index}
+                          style={
+                            elem.width
+                              ? { width: elem.width }
+                              : { width: "auto" }
+                          }
+                        />
+                      );
+                    })
+                  : null}
+                {configGrid?.colCommands !== false &&
+                configButtonsGrid?.some((elem) => !elem.inToolbar) ? (
+                  <col
+                    style={{
+                      width:
+                        configButtonsGrid?.filter((elem) => !elem.inToolbar)
+                          ?.length === 3
+                          ? "80px"
+                          : configButtonsGrid?.filter((elem) => !elem.inToolbar)
+                              ?.length < 3
+                          ? configButtonsGrid?.filter((elem) => !elem.inToolbar)
+                              ?.length *
+                              40 +
+                            "px"
+                          : configButtonsGrid?.filter((elem) => !elem.inToolbar)
+                              ?.length *
+                              30 +
+                            "px",
+                    }}
+                  />
+                ) : null}
+              </colgroup>
+              <tbody role="presentation">
+                {rowsGrid.map((elem, index) => {
+                  return (
+                    <tr
+                      key={gridId + "_row_" + index}
+                      id={gridId + "_row_" + index}
+                      className={
+                        idsSelected &&
+                        idsSelected.indexOf(elem[configGrid?.colPrimary]) !== -1
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      {configGrid?.buttonCommandSelect !== false ? (
+                        <td
+                          className="command-select fix"
+                          onClick={() =>
+                            rowsGrid &&
+                            selectRow(rowsGrid[index][configGrid.colPrimary])
+                          }
+                        >
+                          <Checkbox
+                            aria-label="Select row"
+                            role="checkbox"
+                            type="checkbox"
+                            name={"checkbox_" + index}
+                            tabIndex={0}
+                            className="border-box"
+                            onChange={(e) =>
+                              rowsGrid &&
+                              removeSelectRow(
+                                e,
+                                rowsGrid[index][configGrid.colPrimary]
+                              )
                             }
+                            checked={
+                              idsSelected
+                                ? idsSelected.indexOf(
+                                    rowsGrid &&
+                                      rowsGrid[index][configGrid.colPrimary]
+                                  ) !== -1
+                                : false
+                            }
+                            style={{
+                              margin: "auto",
+                              background: "transparent",
+                            }}
                           />
-                        );
-                      })
-                    : null}
-                  {configGrid?.colCommands !== false &&
-                  configButtonsGrid?.some((elem) => !elem.inToolbar) ? (
-                    <col
-                      style={{
-                        width:
-                          configButtonsGrid?.filter((elem) => !elem.inToolbar)
-                            ?.length === 3
-                            ? "80px"
-                            : configButtonsGrid?.filter(
-                                (elem) => !elem.inToolbar
-                              )?.length < 3
-                            ? configButtonsGrid?.filter(
-                                (elem) => !elem.inToolbar
-                              )?.length *
-                                40 +
-                              "px"
-                            : configButtonsGrid?.filter(
-                                (elem) => !elem.inToolbar
-                              )?.length *
-                                30 +
-                              "px",
-                      }}
-                    />
-                  ) : null}
-                </colgroup>
-                <tbody role="presentation">
-                  {rowsGrid.map((elem, index) => {
-                    return (
-                      <tr
-                        key={gridId + "_row_" + index}
-                        id={gridId + "_row_" + index}
-                        // className={
-                        //   idsSelected &&
-                        //   idsSelected.indexOf(
-                        //     rowsClone[index][configGrid?.colPrimary]
-                        //   ) !== -1
-                        //     ? "selected"
-                        //     : null
-                        // }
-                      >
-                        {configGrid?.buttonCommandSelect !== false ? (
+                        </td>
+                      ) : null}
+                      {Object.values(rowsGrid[index]).map((elem2, index2) => {
+                        return (
                           <td
-                            className="command-select fix"
-                            onClick={() =>
-                              rows &&
-                              selectRow(rows[index][configGrid.colPrimary])
-                            }
+                            key={"col_" + index2}
+                            title={elem2}
+                            data-column={index2}
+                            className={elem.fix ? "fix" : ""}
+                            // onClick={() =>
+                            //   changeCheckboxByRow(
+                            //     rowsClone[index][configGrid?.colPrimary]
+                            //   )
+                            // }
                           >
-                            <Checkbox
-                              aria-label="Select row"
-                              role="checkbox"
-                              type="checkbox"
-                              name={"checkbox_" + index}
-                              tabIndex={0}
-                              className="border-box"
-                              onChange={(e) =>
-                                rows &&
-                                removeSelectRow(
-                                  e,
-                                  rows[index][configGrid.colPrimary]
-                                )
-                              }
-                              checked={
-                                idsSelected
-                                  ? idsSelected.indexOf(
-                                      rows && rows[index][configGrid.colPrimary]
-                                    ) !== -1
-                                  : false
-                              }
-                              style={{
-                                margin: "auto",
-                                background: "transparent",
-                              }}
-                            />
+                            <TextGridContent>{elem2}</TextGridContent>
                           </td>
-                        ) : null}
-                        {Object.values(rowsGrid[index]).map((elem2, index2) => {
-                          return (
-                            <td
-                              key={"col_" + index2}
-                              title={elem2}
-                              data-column={index2}
-                              className={elem.fix ? "fix" : ""}
-                              // onClick={() =>
-                              //   changeCheckboxByRow(
-                              //     rowsClone[index][configGrid?.colPrimary]
-                              //   )
-                              // }
-                            >
-                              <TextGridContent>{elem2}</TextGridContent>
-                            </td>
-                          );
-                        })}
-                        {configGrid?.colCommands !== false &&
-                        configButtonsGrid?.some((elem) => !elem.inToolbar) ? (
-                          <td className="command-edit fix">
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-evenly",
-                              }}
-                            >
-                              {configButtonsGrid?.map((button, index3) => {
-                                if (
-                                  !button.inToolbar &&
-                                  button.icon &&
-                                  !button.inMoreActions
-                                ) {
-                                  return (
-                                    <ActionButton
-                                      key={"button_" + (index3 + 1)}
-                                      id={"button_" + (index3 + 1)}
-                                      // className={
-                                      //   "elem_" +
-                                      //   rowsClone[index][
-                                      //     configGrid?.colPrimary
-                                      //   ]
-                                      // }
-                                      // onClick={() =>
-                                      //   button.action
-                                      //     ? button.action(
-                                      //         rowsClone[index][
-                                      //           configGrid?.colPrimary
-                                      //         ]
-                                      //       )
-                                      //     : alert(
-                                      //         `este botão está sem ação`
-                                      //       )
-                                      // }
-                                      title={button.title ?? null}
-                                      aria-label={button.title ?? null}
-                                    >
-                                      <FontAwesomeIcon icon={button.icon} />
-                                    </ActionButton>
-                                  );
-                                } else {
-                                  return null;
-                                }
-                              })}
-                              {configButtonsGrid?.some(
-                                (elem) => elem.inMoreActions && !elem.inToolbar
-                              ) ? (
-                                <button
-                                  style={{ position: "relative" }}
-                                  id={"buttonAction_" + index}
-                                  // onClick={() => showItems(index)}
-                                  // onBlur={() => hideItems(index)}
-                                >
-                                  <ListItems
-                                    className="list_items"
-                                    id={"listItems_" + index}
+                        );
+                      })}
+                      {configGrid?.colCommands !== false &&
+                      configButtonsGrid?.some((elem) => !elem.inToolbar) ? (
+                        <td className="command-edit fix">
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-evenly",
+                            }}
+                          >
+                            {configButtonsGrid?.map((button, index3) => {
+                              if (
+                                !button.inToolbar &&
+                                button.icon &&
+                                !button.inMoreActions
+                              ) {
+                                return (
+                                  <ActionButton
+                                    key={"button_" + (index3 + 1)}
+                                    id={"button_" + (index3 + 1)}
+                                    className={
+                                      "elem_" +
+                                      rowsGrid[index][configGrid?.colPrimary]
+                                    }
+                                    onClick={() =>
+                                      button.action
+                                        ? button.action(
+                                            rowsGrid[index][
+                                              configGrid?.colPrimary
+                                            ]
+                                          )
+                                        : alert(`este botão está sem ação`)
+                                    }
+                                    title={button.title ?? null}
+                                    aria-label={button.title ?? null}
                                   >
-                                    {configButtonsGrid?.map(
-                                      (button, index2) => {
-                                        if (
-                                          !button.inToolbar &&
-                                          button.inMoreActions &&
-                                          button.text
-                                        ) {
-                                          return (
-                                            <Item
-                                              key={"moreAction_" + index2}
-                                              // onClick={() =>
-                                              //   button.action
-                                              //     ? button.action(
-                                              //         rowsClone[index][
-                                              //           configGrid
-                                              //             ?.colPrimary
-                                              //         ]
-                                              //       )
-                                              //     : alert(
-                                              //         `este botão está sem ação`
-                                              //       )
-                                              // }
-                                            >
-                                              {button.text}
-                                            </Item>
-                                          );
-                                        } else {
-                                          return null;
-                                        }
-                                      }
-                                    )}
-                                  </ListItems>
-                                  <FontAwesomeIcon icon={faEllipsisVertical} />
-                                </button>
-                              ) : null}
-                            </div>
-                          </td>
-                        ) : null}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </TableGrid>
-            </DataGridContentBody>
-          ) : rowsGrid?.length === 0 ? (
-            <DataGridContentBody role="presentation">
-              {/* {loading && setLoading(false)} */}
-              <TableGrid as="div" role="presentation">
-                <span
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    padding: "10px",
-                  }}
-                >
-                  Nenhum registro encontrado.
-                </span>
-              </TableGrid>
-            </DataGridContentBody>
-          ) : null}
-          {/* </Suspense> */}
-        </DataGridBody>
-        <ColumnSelectorRender gridId={gridId} />
-      </DatagridHeader>
+                                    <FontAwesomeIcon icon={button.icon} />
+                                  </ActionButton>
+                                );
+                              } else {
+                                return null;
+                              }
+                            })}
+                            {configButtonsGrid?.some(
+                              (elem) => elem.inMoreActions && !elem.inToolbar
+                            ) ? (
+                              <button
+                                style={{ position: "relative" }}
+                                id={"buttonAction_" + index}
+                                // onClick={() => showItems(index)}
+                                // onBlur={() => hideItems(index)}
+                              >
+                                <ListItems
+                                  className="list_items"
+                                  id={"listItems_" + index}
+                                >
+                                  {configButtonsGrid?.map((button, index2) => {
+                                    if (
+                                      !button.inToolbar &&
+                                      button.inMoreActions &&
+                                      button.text
+                                    ) {
+                                      return (
+                                        <Item
+                                          key={"moreAction_" + index2}
+                                          // onClick={() =>
+                                          //   button.action
+                                          //     ? button.action(
+                                          //         rowsClone[index][
+                                          //           configGrid
+                                          //             ?.colPrimary
+                                          //         ]
+                                          //       )
+                                          //     : alert(
+                                          //         `este botão está sem ação`
+                                          //       )
+                                          // }
+                                        >
+                                          {button.text}
+                                        </Item>
+                                      );
+                                    } else {
+                                      return null;
+                                    }
+                                  })}
+                                </ListItems>
+                                <FontAwesomeIcon icon={faEllipsisVertical} />
+                              </button>
+                            ) : null}
+                          </div>
+                        </td>
+                      ) : null}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </TableGrid>
+          </DataGridContentBody>
+        ) : rowsGrid?.length === 0 ? (
+          <DataGridContentBody role="presentation">
+            {/* {loading && setLoading(false)} */}
+            <TableGrid as="div" role="presentation">
+              <span
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  padding: "10px",
+                }}
+              >
+                Nenhum registro encontrado.
+              </span>
+            </TableGrid>
+          </DataGridContentBody>
+        ) : null}
+        {/* </Suspense> */}
+      </DataGridBody>
+      <ColumnSelectorRender gridId={gridId} />
     </DataGrid>
   );
 }

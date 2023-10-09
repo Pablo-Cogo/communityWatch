@@ -1,9 +1,15 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { SortProps, useColumnFilterContext } from "./columns.context";
 import { Column } from "../types";
+import { PageSizeOption, usePaginateContext } from "./paginate.context";
 
 interface RowsContextType<T> {
-  filterRows: (columns: Column<T>[], colSort?: SortProps<T>) => void;
+  filterRows: (
+    columns: Column<T>[],
+    colSort?: SortProps<T>,
+    atualPage?: number,
+    atualPageSize?: PageSizeOption
+  ) => void;
   selectRow: (id: string) => void;
   checkAllRows: (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -12,6 +18,8 @@ interface RowsContextType<T> {
   removeSelectRow: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
   idsSelected: string[];
   rowsGrid: T[] | undefined;
+  rowsWithAllRows: T[];
+  totalPages: number;
 }
 
 const RowsContext = createContext<RowsContextType<any> | undefined>(undefined);
@@ -26,10 +34,12 @@ const RowsProvider = <T extends Record<string, any>>({
   rows,
 }: RowsProviderProps<T>) => {
   const { columnSort, filteredColumns } = useColumnFilterContext();
+  const { atualPage, atualPageSize, filterListPages } = usePaginateContext();
 
   const [idsSelected, setIdsSelected] = useState<string[]>([]);
   const [rowsWithAllColumns, setRowsWithAllColumns] = useState<T[]>([]); //linhas sem o filtro das colunas - com orderby e paginate
   const [rowsWithAllRows, setRowsWithAllRows] = useState<T[]>([]); //linhas sem paginação - com orderby
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   const orderRowsDefault = (colSort?: keyof T, asc?: boolean) => {
     var linesClone = JSON.parse(JSON.stringify(rows)) as T[];
@@ -72,6 +82,26 @@ const RowsProvider = <T extends Record<string, any>>({
     return linesClone;
   };
 
+  const paginateRows = (
+    rows: T[],
+    atualPage: number,
+    atualPageSize: PageSizeOption
+  ) => {
+    if (atualPageSize !== "Todos") {
+      const total = Math.ceil(rows.length / atualPageSize);
+      setTotalPages(total);
+      filterListPages(total, atualPage);
+      var linesClone = JSON.parse(JSON.stringify(rows)) as T[];
+
+      linesClone.splice(0, (atualPage - 1) * atualPageSize);
+      return linesClone?.slice(0, atualPageSize);
+    } else {
+      setTotalPages(1);
+      filterListPages(1, atualPage);
+      return rows;
+    }
+  };
+
   const removeColumn = (rows: T[], columns: Column<T>[]) => {
     if (!columns) return;
 
@@ -92,14 +122,18 @@ const RowsProvider = <T extends Record<string, any>>({
 
   const filterRowsDefault = (
     columns: Column<T>[] = filteredColumns,
-    colSort: SortProps<T> = columnSort
+    colSort: SortProps<T> = columnSort,
+    page: number = atualPage,
+    pageSize: PageSizeOption = atualPageSize
   ) => {
     const rowsOrdered =
       colSort.column && colSort.asc !== undefined
         ? orderRowsDefault(colSort.column, colSort.asc)
         : rows ?? [];
     setRowsWithAllRows(rowsOrdered);
-    const rowsWithoutColumns = removeColumn(rowsOrdered, columns);
+    const pagedRows = paginateRows(rowsOrdered, page, pageSize);
+    setRowsWithAllColumns(pagedRows);
+    const rowsWithoutColumns = removeColumn(pagedRows, columns);
     return rowsWithoutColumns ?? [];
   };
 
@@ -107,9 +141,11 @@ const RowsProvider = <T extends Record<string, any>>({
 
   const filterRows = (
     columns: Column<T>[],
-    colSort: SortProps<T> = columnSort
+    colSort: SortProps<T> = columnSort,
+    page: number = atualPage,
+    pageSize: PageSizeOption = atualPageSize
   ) => {
-    const rowsFiltered = filterRowsDefault(columns, colSort);
+    const rowsFiltered = filterRowsDefault(columns, colSort, page, pageSize);
     setRowsGrid(rowsFiltered);
   };
 
@@ -162,6 +198,8 @@ const RowsProvider = <T extends Record<string, any>>({
     removeSelectRow,
     idsSelected,
     rowsGrid,
+    rowsWithAllRows,
+    totalPages,
   };
 
   return (

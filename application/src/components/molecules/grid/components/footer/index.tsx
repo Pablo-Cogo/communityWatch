@@ -1,5 +1,6 @@
 import {
   ButtonPages,
+  ContainerButtonsPage,
   DataGridFotter,
   DataGridPages,
   DataGridPagesSizes,
@@ -8,9 +9,20 @@ import {
 } from "./style";
 import { FooterGridProps } from "./types";
 import { usePaginateContext } from "../../contexts/paginate.context";
+import useFilterPaginate from "../../hooks/paginate.hook";
+import { useRowsContext } from "../../contexts/rows.context";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 const FooterGrid = ({ gridId }: FooterGridProps) => {
-  const { limitsPerPage, atualPageSize } = usePaginateContext();
+  const { limitsPerPage, atualPageSize, atualPage, listPages } =
+    usePaginateContext();
+  const { backPage, changePageSize, changePage, nextPage } =
+    useFilterPaginate();
+  const { rowsWithAllRows, totalPages } = useRowsContext();
   return (
     <DataGridFotter
       id={`${gridId}_navigationFotter`}
@@ -24,7 +36,7 @@ const FooterGrid = ({ gridId }: FooterGridProps) => {
               key={item}
               tabIndex={0}
               className={atualPageSize === item ? "active" : ""}
-              // onClick={() => changeLimitRow(item)}
+              onClick={() => changePageSize(item)}
               aria-label={`Itens por página: ${item}`}
             >
               {item}
@@ -34,40 +46,39 @@ const FooterGrid = ({ gridId }: FooterGridProps) => {
       </DataGridPagesSizes>
       <DataGridPages>
         <InfoPages>
-          {/* Página {atualPage} de {totalPage} ({rowsData?.length} itens) */}
+          Página {atualPage} de {totalPages} ({rowsWithAllRows?.length} itens)
         </InfoPages>
         <GroupButtonsPage>
-          {/* {atualPage > 1 ? (
-              <ButtonPages onClick={backPage}>
-                <FontAwesomeIcon icon={faChevronLeft} />
-              </ButtonPages>
-            ) : null} */}
-          {/* {listPages &&
-              listPages.map((item, index) => {
-                return (
-                  <ContainerButtonsPage key={item}>
-                    <ButtonPages
-                      type="button"
-                      onClick={() => changePage(item)}
-                      tabIndex="0"
-                      className={atualPage === item ? "active" : ""}
-                      style={index === 0 ? { marginLeft: "1px" } : {}}
-                      aria-label={`Página ${item}`}
-                    >
-                      {item}
-                    </ButtonPages>
-                    {listPages[index + 1] &&
-                    listPages[index + 1] !== item + 1 ? (
-                      <ButtonPages>. . .</ButtonPages>
-                    ) : null}
-                  </ContainerButtonsPage>
-                );
-              })} */}
-          {/* {atualPage < totalPage ? (
-              <ButtonPages onClick={nextPage}>
-                <FontAwesomeIcon icon={faChevronRight} />
-              </ButtonPages>
-            ) : null} */}
+          {atualPage > 1 ? (
+            <ButtonPages onClick={() => backPage()}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </ButtonPages>
+          ) : null}
+          {listPages &&
+            listPages.map((item, index) => {
+              return (
+                <ContainerButtonsPage key={item}>
+                  <ButtonPages
+                    type="button"
+                    onClick={() => changePage(item)}
+                    tabIndex={0}
+                    className={atualPage === item ? "active" : ""}
+                    style={index === 0 ? { marginLeft: "1px" } : {}}
+                    aria-label={`Página ${item}`}
+                  >
+                    {item}
+                  </ButtonPages>
+                  {listPages[index + 1] && listPages[index + 1] !== item + 1 ? (
+                    <ButtonPages>. . .</ButtonPages>
+                  ) : null}
+                </ContainerButtonsPage>
+              );
+            })}
+          {atualPage < totalPages ? (
+            <ButtonPages onClick={() => nextPage()}>
+              <FontAwesomeIcon icon={faChevronRight} />
+            </ButtonPages>
+          ) : null}
         </GroupButtonsPage>
       </DataGridPages>
     </DataGridFotter>

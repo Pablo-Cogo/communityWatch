@@ -120,6 +120,7 @@ export const TableGrid = styled.table`
 
 export const DataGridBody = styled.div`
   box-sizing: border-box;
+  border: 1px solid #ddd;
   -webkit-box-flex: 1;
   -ms-flex: auto;
   flex: auto;

@@ -74,6 +74,46 @@ const Occurrences = () => {
       Cobrade: "123,0",
       Nome: "café",
     },
+    {
+      Id: "4",
+      Cobrade: "123,0",
+      Nome: "café",
+    },
+    {
+      Id: "5",
+      Cobrade: "123,0",
+      Nome: "café",
+    },
+    {
+      Id: "6",
+      Cobrade: "123,0",
+      Nome: "café",
+    },
+    {
+      Id: "7",
+      Cobrade: "123,0",
+      Nome: "café",
+    },
+    {
+      Id: "8",
+      Cobrade: "123,0",
+      Nome: "café",
+    },
+    {
+      Id: "9",
+      Cobrade: "123,0",
+      Nome: "café",
+    },
+    {
+      Id: "10",
+      Cobrade: "123,0",
+      Nome: "café",
+    },
+    {
+      Id: "11",
+      Cobrade: "123,0",
+      Nome: "café",
+    },
   ];
 
   return (
