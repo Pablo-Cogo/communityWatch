@@ -19,6 +19,7 @@ interface RowsContextType<T> {
   idsSelected: string[];
   rowsGrid: T[] | undefined;
   rowsWithAllRows: T[];
+  rowsWithAllColumns: T[];
   totalPages: number;
 }
 
@@ -199,6 +200,7 @@ const RowsProvider = <T extends Record<string, any>>({
     idsSelected,
     rowsGrid,
     rowsWithAllRows,
+    rowsWithAllColumns,
     totalPages,
   };
 

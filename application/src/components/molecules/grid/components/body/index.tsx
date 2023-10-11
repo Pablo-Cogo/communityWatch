@@ -32,8 +32,14 @@ function BodyGrid<T extends Record<string, any>>({
 }: BodyGridProps<T>) {
   const { filteredColumns } = useColumnFilterContext();
   const { orderRowsAndColumns } = useFilterRowsAndColumns();
-  const { selectRow, removeSelectRow, checkAllRows, idsSelected, rowsGrid } =
-    useRowsContext();
+  const {
+    selectRow,
+    removeSelectRow,
+    checkAllRows,
+    idsSelected,
+    rowsGrid,
+    rowsWithAllColumns,
+  } = useRowsContext();
 
   return (
     <DataGrid id={gridId}>
@@ -214,7 +220,7 @@ function BodyGrid<T extends Record<string, any>>({
                 ) : null}
               </colgroup>
               <tbody role="presentation">
-                {rowsGrid.map((elem, index) => {
+                {rowsWithAllColumns.map((elem, index) => {
                   return (
                     <tr
                       key={gridId + "_row_" + index}
@@ -230,8 +236,10 @@ function BodyGrid<T extends Record<string, any>>({
                         <td
                           className="command-select fix"
                           onClick={() =>
-                            rowsGrid &&
-                            selectRow(rowsGrid[index][configGrid.colPrimary])
+                            rowsWithAllColumns &&
+                            selectRow(
+                              rowsWithAllColumns[index][configGrid.colPrimary]
+                            )
                           }
                         >
                           <Checkbox
@@ -242,17 +250,19 @@ function BodyGrid<T extends Record<string, any>>({
                             tabIndex={0}
                             className="border-box"
                             onChange={(e) =>
-                              rowsGrid &&
+                              rowsWithAllColumns &&
                               removeSelectRow(
                                 e,
-                                rowsGrid[index][configGrid.colPrimary]
+                                rowsWithAllColumns[index][configGrid.colPrimary]
                               )
                             }
                             checked={
                               idsSelected
                                 ? idsSelected.indexOf(
-                                    rowsGrid &&
-                                      rowsGrid[index][configGrid.colPrimary]
+                                    rowsWithAllColumns &&
+                                      rowsWithAllColumns[index][
+                                        configGrid.colPrimary
+                                      ]
                                   ) !== -1
                                 : false
                             }
@@ -270,11 +280,12 @@ function BodyGrid<T extends Record<string, any>>({
                             title={elem2}
                             data-column={index2}
                             className={elem.fix ? "fix" : ""}
-                            // onClick={() =>
-                            //   changeCheckboxByRow(
-                            //     rowsClone[index][configGrid?.colPrimary]
-                            //   )
-                            // }
+                            onClick={() =>
+                              rowsWithAllColumns &&
+                              selectRow(
+                                rowsWithAllColumns[index][configGrid.colPrimary]
+                              )
+                            }
                           >
                             <TextGridContent>{elem2}</TextGridContent>
                           </td>
@@ -302,12 +313,14 @@ function BodyGrid<T extends Record<string, any>>({
                                     id={"button_" + (index3 + 1)}
                                     className={
                                       "elem_" +
-                                      rowsGrid[index][configGrid?.colPrimary]
+                                      rowsWithAllColumns[index][
+                                        configGrid?.colPrimary
+                                      ]
                                     }
                                     onClick={() =>
                                       button.action
                                         ? button.action(
-                                            rowsGrid[index][
+                                            rowsWithAllColumns[index][
                                               configGrid?.colPrimary
                                             ]
                                           )
