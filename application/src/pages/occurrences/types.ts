@@ -1,5 +1,14 @@
 export interface Occurrence {
   Id: string;
-  Cobrade: string;
-  Nome: string;
+  occurrenceDescription: string;
+  occurrenceCobradeCode: string;
+  occurrenceStatus: string;
+  occurrenceInitialDate: string;
+  occurrenceFinalDate: string;
 }
+/*
+enum status {
+  aberto = 0,
+  processando = 1,
+  fechado = 2,
+}*/

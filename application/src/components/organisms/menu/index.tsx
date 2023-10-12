@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Icon, ItemMenu, ListMenu, SidebarContainer, Text } from "./style";
 import LogoSidebar from "../../atoms/Logo";
-import { Book, Home2, Map, Message } from "iconsax-react";
+import { Book, Box, Home2, Map, Message } from "iconsax-react";
 import { Link } from "react-router-dom";
 
 const SidebarMenu = () => {
@@ -32,6 +32,12 @@ const SidebarMenu = () => {
               <Book />
             </Icon>
             <Text open={openMenu}>Ocorrências</Text>
+          </ItemMenu>
+          <ItemMenu as={Link} to={"/adm/resources"} open={openMenu}>
+            <Icon>
+              <Box />
+            </Icon>
+            <Text open={openMenu}>Recursos</Text>
           </ItemMenu>
           <ItemMenu as={Link} to={"/map"} open={openMenu}>
             <Icon>

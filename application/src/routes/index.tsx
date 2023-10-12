@@ -13,6 +13,7 @@ import SidebarMenu from "../components/organisms/menu";
 import InternalHeader from "../components/organisms/header/internal";
 import Occurrences from "../pages/occurrences";
 import Main from "../components/organisms/main";
+import Resources from "../pages/resources";
 
 const AppRouter = () => {
   return (
@@ -41,6 +42,7 @@ const AppRouter = () => {
           <Route index element={<Dashboard />} />
           <Route path="chat" element={<>aaa</>} />
           <Route path="occurrences" element={<Occurrences />} />
+          <Route path="resources" element={<Resources />} />
         </Route>
         <Route
           path="*"

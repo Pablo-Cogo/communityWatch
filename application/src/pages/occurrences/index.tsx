@@ -8,8 +8,11 @@ import Card from "../../components/molecules/card";
 import Grid from "../../components/molecules/grid";
 import { Column, GridButtonProps } from "../../components/molecules/grid/types";
 import { Occurrence } from "./types";
+import { Format } from "../../helpers/format";
+import { useNavigate } from "react-router-dom";
 
 const Occurrences = () => {
+  const navigate = useNavigate();
   const ButtonsGrid: GridButtonProps[] = [
     {
       title: "carregar registros",
@@ -32,12 +35,12 @@ const Occurrences = () => {
     {
       icon: faPencil,
       title: "Editar",
-      action: (id) => console.log(id),
+      action: (id) => navigate(`${id}`),
     },
     {
       icon: faTrashCan,
       title: "Deletar",
-      action: (id) => console.log(id),
+      action: (id) => navigate(`${id}`),
     },
   ];
 
@@ -49,70 +52,115 @@ const Occurrences = () => {
     },
     {
       showOnlySelector: true,
-      name: "Cobrade",
-      column: "Cobrade",
+      name: "Descrição",
+      column: "occurrenceDescription",
     },
     {
-      name: "Nome",
-      column: "Nome",
+      name: "Cod. Cobrade",
+      column: "occurrenceCobradeCode",
+    },
+    {
+      name: "Status",
+      column: "occurrenceStatus",
+    },
+    {
+      name: "Data inicial",
+      column: "occurrenceInitialDate",
+    },
+    {
+      name: "Data Final",
+      column: "occurrenceFinalDate",
     },
   ];
 
   const RowsData: Occurrence[] = [
     {
       Id: "1",
-      Cobrade: "0710",
-      Nome: "çéservé",
+      occurrenceDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      occurrenceCobradeCode: "1.5.1.4.0",
+      occurrenceStatus: "🟢 Aberto",
+      occurrenceInitialDate: Format.date.default( new Date(2023, 9, 10)),
+      occurrenceFinalDate: Format.date.default( new Date(2023, 9, 10))
     },
     {
       Id: "2",
-      Cobrade: "12,50",
-      Nome: "communiqué",
+      occurrenceDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      occurrenceCobradeCode: "2.2.2.2.0",
+      occurrenceStatus: "🔴 Fechado",
+     occurrenceInitialDate: Format.date.default( new Date(2023, 9, 10)),
+      occurrenceFinalDate: Format.date.default( new Date(2023, 9, 10))
     },
     {
       Id: "3",
-      Cobrade: "123,0",
-      Nome: "café",
+      occurrenceDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      occurrenceCobradeCode: "1.5.1.4.0",
+      occurrenceStatus: "🟢 Aberto",
+     occurrenceInitialDate: Format.date.default( new Date(2023, 9, 10)),
+      occurrenceFinalDate: Format.date.default( new Date(2023, 9, 10))
     },
     {
       Id: "4",
-      Cobrade: "123,0",
-      Nome: "café",
+      occurrenceDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      occurrenceCobradeCode: "2.1.2.1.0",
+      occurrenceStatus: "🔴 Fechado",
+     occurrenceInitialDate: Format.date.default( new Date(2023, 9, 10)),
+      occurrenceFinalDate: Format.date.default( new Date(2023, 9, 10))
     },
     {
       Id: "5",
-      Cobrade: "123,0",
-      Nome: "café",
+      occurrenceDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      occurrenceCobradeCode: "2.2.2.2.0",
+      occurrenceStatus: "🟢 Aberto",
+     occurrenceInitialDate: Format.date.default( new Date(2023, 9, 10)),
+      occurrenceFinalDate: Format.date.default( new Date(2023, 9, 10))
     },
     {
       Id: "6",
-      Cobrade: "123,0",
-      Nome: "café",
+      occurrenceDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      occurrenceCobradeCode: "2.5.5.0.0",
+      occurrenceStatus: "🟢 Aberto",
+     occurrenceInitialDate: Format.date.default( new Date(2023, 9, 10)),
+      occurrenceFinalDate: Format.date.default( new Date(2023, 9, 10))
     },
     {
       Id: "7",
-      Cobrade: "123,0",
-      Nome: "café",
+      occurrenceDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      occurrenceCobradeCode: "1.5.1.4.0",
+      occurrenceStatus: "🔴 Fechado",
+     occurrenceInitialDate: Format.date.default( new Date(2023, 9, 10)),
+      occurrenceFinalDate: Format.date.default( new Date(2023, 9, 10))
     },
     {
       Id: "8",
-      Cobrade: "123,0",
-      Nome: "café",
+      occurrenceDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      occurrenceCobradeCode: "2.2.2.2.0",
+      occurrenceStatus: "🟢 Aberto",
+     occurrenceInitialDate: Format.date.default( new Date(2023, 9, 10)),
+      occurrenceFinalDate: Format.date.default( new Date(2023, 9, 10))
     },
     {
       Id: "9",
-      Cobrade: "123,0",
-      Nome: "café",
+      occurrenceDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      occurrenceCobradeCode: "2.4.2.0.0",
+      occurrenceStatus: "🟢 Aberto",
+     occurrenceInitialDate: Format.date.default( new Date(2023, 9, 10)),
+      occurrenceFinalDate: Format.date.default( new Date(2023, 9, 10))
     },
     {
       Id: "10",
-      Cobrade: "123,0",
-      Nome: "café",
+      occurrenceDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      occurrenceCobradeCode: "2.5.5.0.0",
+      occurrenceStatus: "🟡 Processando",
+     occurrenceInitialDate: Format.date.default( new Date(2023, 9, 10)),
+      occurrenceFinalDate: Format.date.default( new Date(2023, 9, 10))
     },
     {
       Id: "11",
-      Cobrade: "123,0",
-      Nome: "café",
+      occurrenceDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      occurrenceCobradeCode: "2.4.2.0.0",
+      occurrenceStatus: "🟡 Processando",
+     occurrenceInitialDate: Format.date.default( new Date(2023, 9, 10)),
+      occurrenceFinalDate: Format.date.default( new Date(2023, 9, 10))
     },
   ];
 
