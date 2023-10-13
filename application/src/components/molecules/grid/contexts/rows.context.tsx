@@ -50,11 +50,7 @@ const RowsProvider = <T extends Record<any, any>>({
       const newItem: T = {} as T;
       for (const key in item) {
         if (item.hasOwnProperty(key)) {
-          if (isEnumProps(item[key])) {
-            newItem[key as keyof T] = convertEnumToValue(item[key]);
-          } else {
-            newItem[key as keyof T] = item[key];
-          }
+          newItem[key as keyof T] = convertEnumToValue(item[key]);
         }
       }
       return newItem;
@@ -206,9 +202,7 @@ const RowsProvider = <T extends Record<any, any>>({
       if (e.target.checked) {
         let ids = [];
         for (let i = 0; i < rows.length; i++) {
-          const id = isEnumProps(rows[i][colPrimary])
-            ? convertEnumToKey(rows[i][colPrimary])
-            : rows[i][colPrimary];
+          const id = convertEnumToKey(rows[i][colPrimary]);
           if (ids.indexOf(id) === -1) {
             ids.push(id);
           }

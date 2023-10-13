@@ -31,7 +31,7 @@ function BodyGrid<T extends Record<string, any>>({
   configButtonsGrid,
   rows,
 }: BodyGridProps<T>) {
-  const { isEnumProps, convertEnumToKey } = useIsEnumProps<T>();
+  const { convertEnumToKey, convertReactElementToString } = useIsEnumProps<T>();
   const { filteredColumns } = useColumnFilterContext();
   const { orderRowsAndColumns } = useFilterRowsAndColumns();
   const {
@@ -102,9 +102,7 @@ function BodyGrid<T extends Record<string, any>>({
                         idsSelected?.length > 0 &&
                         !rows?.every((element) =>
                           idsSelected.includes(
-                            isEnumProps(element[configGrid.colPrimary])
-                              ? convertEnumToKey(element[configGrid.colPrimary])
-                              : element[configGrid.colPrimary]
+                            convertEnumToKey(element[configGrid.colPrimary])
                           )
                         )
                           ? "mixed"
@@ -113,9 +111,7 @@ function BodyGrid<T extends Record<string, any>>({
                       onChange={(e) => checkAllRows(e, configGrid.colPrimary)}
                       checked={rows?.every((element) =>
                         idsSelected.includes(
-                          isEnumProps(element[configGrid.colPrimary])
-                            ? convertEnumToKey(element[configGrid.colPrimary])
-                            : element[configGrid.colPrimary]
+                          convertEnumToKey(element[configGrid.colPrimary])
                         )
                       )}
                       style={{
@@ -242,11 +238,9 @@ function BodyGrid<T extends Record<string, any>>({
                       className={
                         idsSelected &&
                         idsSelected.indexOf(
-                          isEnumProps(elem[configGrid?.colPrimary])
-                            ? convertEnumToKey(
-                                rowsWithAllColumns[index][configGrid.colPrimary]
-                              )
-                            : elem[configGrid?.colPrimary]
+                          convertEnumToKey(
+                            rowsWithAllColumns[index][configGrid.colPrimary]
+                          )
                         ) !== -1
                           ? "selected"
                           : ""
@@ -258,17 +252,9 @@ function BodyGrid<T extends Record<string, any>>({
                           onClick={() =>
                             rowsWithAllColumns &&
                             selectRow(
-                              isEnumProps(
+                              convertEnumToKey(
                                 rowsWithAllColumns[index][configGrid.colPrimary]
                               )
-                                ? convertEnumToKey(
-                                    rowsWithAllColumns[index][
-                                      configGrid.colPrimary
-                                    ]
-                                  )
-                                : rowsWithAllColumns[index][
-                                    configGrid.colPrimary
-                                  ]
                             )
                           }
                         >
@@ -283,38 +269,22 @@ function BodyGrid<T extends Record<string, any>>({
                               rowsWithAllColumns &&
                               removeSelectRow(
                                 e,
-                                isEnumProps(
+                                convertEnumToKey(
                                   rowsWithAllColumns[index][
                                     configGrid.colPrimary
                                   ]
                                 )
-                                  ? convertEnumToKey(
-                                      rowsWithAllColumns[index][
-                                        configGrid.colPrimary
-                                      ]
-                                    )
-                                  : rowsWithAllColumns[index][
-                                      configGrid.colPrimary
-                                    ]
                               )
                             }
                             checked={
                               idsSelected
                                 ? idsSelected.indexOf(
                                     rowsWithAllColumns &&
-                                      isEnumProps(
+                                      convertEnumToKey(
                                         rowsWithAllColumns[index][
                                           configGrid.colPrimary
                                         ]
                                       )
-                                      ? convertEnumToKey(
-                                          rowsWithAllColumns[index][
-                                            configGrid.colPrimary
-                                          ]
-                                        )
-                                      : rowsWithAllColumns[index][
-                                          configGrid.colPrimary
-                                        ]
                                   ) !== -1
                                 : false
                             }
@@ -329,25 +299,17 @@ function BodyGrid<T extends Record<string, any>>({
                         return (
                           <td
                             key={"col_" + index2}
-                            title={elem2}
+                            title={convertReactElementToString(elem2)}
                             data-column={index2}
                             className={elem.fix ? "fix" : ""}
                             onClick={() =>
                               rowsWithAllColumns &&
                               selectRow(
-                                isEnumProps(
+                                convertEnumToKey(
                                   rowsWithAllColumns[index][
                                     configGrid.colPrimary
                                   ]
                                 )
-                                  ? convertEnumToKey(
-                                      rowsWithAllColumns[index][
-                                        configGrid.colPrimary
-                                      ]
-                                    )
-                                  : rowsWithAllColumns[index][
-                                      configGrid.colPrimary
-                                    ]
                               )
                             }
                           >
@@ -377,36 +339,20 @@ function BodyGrid<T extends Record<string, any>>({
                                     id={"button_" + (index3 + 1)}
                                     className={
                                       "elem_" +
-                                      isEnumProps(
+                                      convertEnumToKey(
                                         rowsWithAllColumns[index][
                                           configGrid.colPrimary
                                         ]
                                       )
-                                        ? convertEnumToKey(
-                                            rowsWithAllColumns[index][
-                                              configGrid.colPrimary
-                                            ]
-                                          )
-                                        : rowsWithAllColumns[index][
-                                            configGrid.colPrimary
-                                          ]
                                     }
                                     onClick={() =>
                                       button.action
                                         ? button.action(
-                                            isEnumProps(
+                                            convertEnumToKey(
                                               rowsWithAllColumns[index][
                                                 configGrid.colPrimary
                                               ]
                                             )
-                                              ? convertEnumToKey(
-                                                  rowsWithAllColumns[index][
-                                                    configGrid.colPrimary
-                                                  ]
-                                                )
-                                              : rowsWithAllColumns[index][
-                                                  configGrid.colPrimary
-                                                ]
                                           )
                                         : alert(`este botão está sem ação`)
                                     }
