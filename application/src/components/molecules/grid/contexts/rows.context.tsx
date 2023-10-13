@@ -1,7 +1,8 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { SortProps, useColumnFilterContext } from "./columns.context";
-import { Column } from "../types";
+import { Column, EnumProps } from "../types";
 import { PageSizeOption, usePaginateContext } from "./paginate.context";
+import useIsEnumProps from "../hooks/isEnumProps.hook";
 
 interface RowsContextType<T> {
   filterRows: (
@@ -13,10 +14,10 @@ interface RowsContextType<T> {
   selectRow: (id: string) => void;
   checkAllRows: (
     e: React.ChangeEvent<HTMLInputElement>,
-    colPrimary: string
+    colPrimary: keyof T
   ) => void;
   removeSelectRow: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
-  idsSelected: string[];
+  idsSelected: (keyof T)[];
   rowsGrid: T[] | undefined;
   rowsWithAllRows: T[];
   rowsWithAllColumns: T[];
@@ -30,24 +31,49 @@ interface RowsProviderProps<T> {
   rows?: T[];
 }
 
-const RowsProvider = <T extends Record<string, any>>({
+const RowsProvider = <T extends Record<any, any>>({
   children,
   rows,
 }: RowsProviderProps<T>) => {
   const { columnSort, filteredColumns } = useColumnFilterContext();
   const { atualPage, atualPageSize, filterListPages } = usePaginateContext();
+  const { isEnumProps, convertEnumToValue, convertEnumToKey } =
+    useIsEnumProps<T>();
 
-  const [idsSelected, setIdsSelected] = useState<string[]>([]);
+  const [idsSelected, setIdsSelected] = useState<(keyof T)[]>([]);
   const [rowsWithAllColumns, setRowsWithAllColumns] = useState<T[]>([]); //linhas sem o filtro das colunas - com orderby e paginate
   const [rowsWithAllRows, setRowsWithAllRows] = useState<T[]>([]); //linhas sem paginação - com orderby
   const [totalPages, setTotalPages] = useState<number>(0);
 
+  const removeEnumProps = (rows: T[]) => {
+    const rowsClone: T[] = rows.map((item) => {
+      const newItem: T = {} as T;
+      for (const key in item) {
+        if (item.hasOwnProperty(key)) {
+          if (isEnumProps(item[key])) {
+            newItem[key as keyof T] = convertEnumToValue(item[key]);
+          } else {
+            newItem[key as keyof T] = item[key];
+          }
+        }
+      }
+      return newItem;
+    });
+
+    return rowsClone;
+  };
+
   const orderRowsDefault = (colSort?: keyof T, asc?: boolean) => {
-    var linesClone = JSON.parse(JSON.stringify(rows)) as T[];
+    if (!rows) return rows ?? [];
+    var linesClone = [...rows];
     linesClone = linesClone.sort((a, b) => {
       if (colSort && asc !== undefined) {
-        const valueA = a[colSort];
-        const valueB = b[colSort];
+        const valueA = isEnumProps(a[colSort])
+          ? (Object.keys(a[colSort])[0] as T[keyof T])
+          : a[colSort];
+        const valueB = isEnumProps(b[colSort])
+          ? (Object.keys(b[colSort])[0] as T[keyof T])
+          : b[colSort];
 
         const splitString = (str: string) => {
           return str.match(/(\d+|\D+)/g) || [];
@@ -92,10 +118,9 @@ const RowsProvider = <T extends Record<string, any>>({
       const total = Math.ceil(rows.length / atualPageSize);
       setTotalPages(total);
       filterListPages(total, atualPage);
-      var linesClone = JSON.parse(JSON.stringify(rows)) as T[];
 
-      linesClone.splice(0, (atualPage - 1) * atualPageSize);
-      return linesClone?.slice(0, atualPageSize);
+      rows.splice(0, (atualPage - 1) * atualPageSize);
+      return rows?.slice(0, atualPageSize);
     } else {
       setTotalPages(1);
       filterListPages(1, atualPage);
@@ -104,7 +129,7 @@ const RowsProvider = <T extends Record<string, any>>({
   };
 
   const removeColumn = (rows: T[], columns: Column<T>[]) => {
-    if (!columns) return;
+    if (!columns) return rows ?? [];
 
     const columnsRemaining = columns.map((col) => col.column);
 
@@ -118,7 +143,7 @@ const RowsProvider = <T extends Record<string, any>>({
       return newRow as T;
     });
 
-    return updatedRowsGrid;
+    return updatedRowsGrid ?? [];
   };
 
   const filterRowsDefault = (
@@ -135,7 +160,7 @@ const RowsProvider = <T extends Record<string, any>>({
     const pagedRows = paginateRows(rowsOrdered, page, pageSize);
     setRowsWithAllColumns(pagedRows);
     const rowsWithoutColumns = removeColumn(pagedRows, columns);
-    return rowsWithoutColumns ?? [];
+    return removeEnumProps(rowsWithoutColumns);
   };
 
   const [rowsGrid, setRowsGrid] = useState<T[]>(() => filterRowsDefault()); //linhas finais da grid - com orderby, paginate e filteredColumns
@@ -175,13 +200,18 @@ const RowsProvider = <T extends Record<string, any>>({
 
   const checkAllRows = (
     e: React.ChangeEvent<HTMLInputElement>,
-    colPrimary: string
+    colPrimary: keyof T
   ) => {
     if (rows && rows?.length > 0) {
       if (e.target.checked) {
         let ids = [];
         for (let i = 0; i < rows.length; i++) {
-          ids.push(rows[i][colPrimary]);
+          const id = isEnumProps(rows[i][colPrimary])
+            ? convertEnumToKey(rows[i][colPrimary])
+            : rows[i][colPrimary];
+          if (ids.indexOf(id) === -1) {
+            ids.push(id);
+          }
         }
         setIdsSelected(ids);
       } else {
@@ -209,7 +239,7 @@ const RowsProvider = <T extends Record<string, any>>({
   );
 };
 
-const useRowsContext = <T extends Record<string, any>>() => {
+const useRowsContext = <T extends Record<any, any>>() => {
   const context = useContext(RowsContext) as RowsContextType<T> | undefined;
   if (context === undefined) {
     throw new Error("useRowsContext must be used within a RowsProvider");

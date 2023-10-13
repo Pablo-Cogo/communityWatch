@@ -20,7 +20,7 @@ function Grid<T extends Record<string, any>>({
   rows,
 }: GridProps<T>) {
   const [configButtonsGrid] = useState(gridButtonProps);
-  const [configGridDefault] = useState<ConfigGridProps>({
+  const [configGridDefault] = useState<ConfigGridProps<T>>({
     buttonColumnSelector: configGrid?.buttonColumnSelector ?? true,
     buttonCommandSelect: configGrid?.buttonColumnSelector ?? true,
     buttonRestore: configGrid?.buttonRestore ?? true,

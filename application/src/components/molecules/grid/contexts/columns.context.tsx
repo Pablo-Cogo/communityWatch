@@ -98,7 +98,10 @@ const ColumnFilterProvider = <T extends Record<string, any>>({
       if (columnKey === elem.column) {
         columSort = {
           column: elem.column,
-          asc: !columnSort?.asc,
+          asc:
+            elem.column === columnSort.column
+              ? !columnSort?.asc
+              : !elem.orderBy,
         };
         return {
           ...elem,

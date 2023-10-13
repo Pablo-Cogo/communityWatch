@@ -3,7 +3,7 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 export interface GridProps<T extends Record<string, any>> {
   gridId: string;
   gridButtonProps?: GridButtonProps[];
-  configGrid?: ConfigGridProps;
+  configGrid?: ConfigGridProps<T>;
   columns?: Column<T>[];
   rows?: T[];
 }
@@ -17,8 +17,8 @@ export interface GridButtonProps {
   action: (id: string | string[]) => void;
 }
 
-export interface ConfigGridProps {
-  colPrimary: string;
+export interface ConfigGridProps<T extends Record<string, any>> {
+  colPrimary: keyof T;
   buttonRestore?: boolean;
   buttonColumnSelector?: boolean;
   buttonCommandSelect?: boolean;
@@ -35,3 +35,7 @@ export interface Column<T> {
   orderBy?: boolean;
   fix?: boolean | false;
 }
+
+export type EnumProps = {
+  [key: string | number]: string | number | React.ReactNode;
+};
