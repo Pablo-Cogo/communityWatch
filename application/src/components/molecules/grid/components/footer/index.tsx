@@ -16,6 +16,7 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useRef } from "react";
 
 const FooterGrid = ({ gridId }: FooterGridProps) => {
   const { limitsPerPage, atualPageSize, atualPage, listPages } =
@@ -23,8 +24,30 @@ const FooterGrid = ({ gridId }: FooterGridProps) => {
   const { backPage, changePageSize, changePage, nextPage } =
     useFilterPaginate();
   const { rowsWithAllRows, totalPages } = useRowsContext();
+  const divObservadaRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const divObservada = divObservadaRef.current;
+    if (!divObservada) return;
+    const observer = new ResizeObserver(() => {
+      setTimeout(() => {
+        divObservada.classList.remove("responsive");
+        if (divObservada.offsetHeight > 60) {
+          divObservada.classList.add("responsive");
+        }
+      });
+    });
+    observer.observe(divObservada);
+
+    return () => {
+      observer.unobserve(divObservada);
+      observer.disconnect();
+    };
+  }, [divObservadaRef]);
+
   return (
     <DataGridFotter
+      ref={divObservadaRef}
       id={`${gridId}_navigationFotter`}
       role="navigation"
       aria-label="Paginação"
