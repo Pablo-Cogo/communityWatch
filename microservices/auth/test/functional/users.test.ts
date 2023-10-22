@@ -102,7 +102,7 @@ describe('users functional tests', () => {
 
       expect(response.body).toEqual({
         code: 422,
-        error: 'User validation failed: userImage: Invalid URL',
+        error: ['Erro no(a) "Imagem de perfil": URL inválida'],
       });
     });
 
@@ -117,7 +117,7 @@ describe('users functional tests', () => {
       expect(response.status).toBe(422);
       expect(response.body).toEqual({
         code: 422,
-        error: 'User validation failed: userName: Path `userName` is required.',
+        error: ['Erro no(a) "Nome de usuário": O campo é obrigatório.'],
       });
     });
 
@@ -132,8 +132,7 @@ describe('users functional tests', () => {
       expect(response.status).toBe(409);
       expect(response.body).toEqual({
         code: 409,
-        error:
-          'User validation failed: userEmail: already exists in the database.',
+        error: ['Erro no(a) "Email": Já existe na base de dados.'],
       });
     });
 

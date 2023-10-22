@@ -51,7 +51,6 @@ export abstract class BaseController<T extends Document> {
       }
     }
 
-    console.log(errorMessages);
     const duplicatedKindErrors = Object.values(error.errors).filter(
       (err) =>
         err.name === 'ValidatorError' &&

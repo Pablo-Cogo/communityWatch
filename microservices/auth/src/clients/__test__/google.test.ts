@@ -23,7 +23,7 @@ describe('GoogleAuth client', () => {
     );
 
     const authClient = new GoogleAuth();
-    const authUrl = await authClient.generateAuthUrl();
+    const authUrl = await authClient.generateAuthUrl(null);
 
     expect(mockGenerateAuthUrl).toHaveBeenCalledWith({
       access_type: 'offline',
