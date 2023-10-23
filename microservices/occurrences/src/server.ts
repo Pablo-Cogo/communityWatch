@@ -1,17 +1,22 @@
+import 'reflect-metadata';
 import bodyParser from 'body-parser';
 import './util/module-alias';
 import { Server } from '@overnightjs/core';
 import { Application } from 'express';
 import { OccurrenceController } from './controllers/occurrence';
+import config from 'config';
+import * as database from '@src/database';
+import { ResourceController } from './controllers/resource';
 
 export class SetupServer extends Server {
-  constructor(private port = 5002) {
+  constructor(private port = config.get('App.port')) {
     super();
   }
 
-  public init(): void {
+  public async init(): Promise<void> {
     this.setupExpress();
     this.setupControllers();
+    await this.setupDatabase();
   }
 
   private setupExpress(): void {
@@ -19,8 +24,13 @@ export class SetupServer extends Server {
   }
 
   private setupControllers(): void {
-    const authController = new OccurrenceController();
-    this.addControllers([authController]);
+    const occurrenceController = new OccurrenceController();
+    const resourceController = new ResourceController();
+    this.addControllers([occurrenceController, resourceController]);
+  }
+
+  private async setupDatabase(): Promise<void> {
+    await database.connect();
   }
 
   public getApp(): Application {

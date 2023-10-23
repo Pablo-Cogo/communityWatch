@@ -1,0 +1,15 @@
+{
+  "App": {
+    "database": {
+      "type": "mysql",
+      "host": "localhost",
+      "port": 3306,
+      "username": "root",
+      "password": "",
+      "database": "communityWatch_occurrences",
+      "synchronize": true,
+      "logging": false
+    },
+    "port": 5002
+  }
+}

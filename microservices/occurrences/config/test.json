@@ -1,0 +1,9 @@
+{
+  "App": {
+    "database": {
+      "database": "communityWatch_occurrences_test",
+      "synchronize": true,
+      "logging": false
+    }
+  }
+}
