@@ -1,6 +1,11 @@
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
 interface ChangeUtils {
+  default: <T = any[]>(
+    id: string,
+    value: T,
+    setValues: Dispatch<SetStateAction<T>>
+  ) => void;
   noMask: <T = any[]>(
     value: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>,
     setValues: Dispatch<SetStateAction<T>>
@@ -31,6 +36,13 @@ interface ChangeUtils {
 }
 
 export const change: ChangeUtils = {
+  default: (id, value, setValues) => {
+    setValues((prevValue) => ({
+      ...prevValue,
+      [id]: value,
+    }));
+  },
+
   noMask: (value, setValues) => {
     setValues((prevValue) => ({
       ...prevValue,

@@ -14,6 +14,7 @@ import InternalHeader from "../components/organisms/header/internal";
 import Occurrences from "../pages/occurrences";
 import Main from "../components/organisms/main";
 import Resources from "../pages/resources";
+import OccurrencesForm from "../pages/occurrences/form";
 
 const AppRouter = () => {
   return (
@@ -42,6 +43,7 @@ const AppRouter = () => {
           <Route index element={<Dashboard />} />
           <Route path="chat" element={<>aaa</>} />
           <Route path="occurrences" element={<Occurrences />} />
+          <Route path="occurrences/add" element={<OccurrencesForm />} />
           <Route path="resources" element={<Resources />} />
         </Route>
         <Route

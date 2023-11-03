@@ -22,7 +22,7 @@ const Occurrences = () => {
     },
     {
       icon: faAdd,
-      action: (id) => console.log(id),
+      action: () => navigate(`add`),
       title: "Inserir",
       inToolbar: true,
     },

@@ -61,4 +61,36 @@ describe('occurrence tests', () => {
     expect(status).toBe(201);
     expect(body).toEqual(expect.objectContaining(expectResponse));
   });
+
+  it('should vinculate address to occurrence', async () => {
+    const newResource: ResourceModel = {
+      resourceName: 'teste',
+      resourcePrice: 10.5,
+      resourceQuantity: 10,
+    };
+    const resourceRepository = dbConnection.getRepository(Resource);
+    const resource = await resourceRepository.save(newResource);
+
+    const newOccurrence: OccurrenceModel = {
+      userId: '1',
+      occurrenceCobradeCode: '123',
+      occurrenceDescription: 'teste',
+      occurrenceStatus: 0,
+      occurrenceInitialDate: new Date(),
+      occurrenceFinalDate: new Date(),
+      resources: [resource],
+    };
+    const expectResponse = {
+      userId: '1',
+      occurrenceCobradeCode: '123',
+      occurrenceDescription: 'teste',
+      occurrenceStatus: 0,
+      resources: [resource],
+    };
+    const { body, status } = await global.testRequest
+      .post('/occurrence')
+      .send(newOccurrence);
+    expect(status).toBe(201);
+    expect(body).toEqual(expect.objectContaining(expectResponse));
+  });
 });

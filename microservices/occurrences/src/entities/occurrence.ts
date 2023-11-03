@@ -4,6 +4,7 @@ import {
   Column,
   BaseEntity,
   ManyToMany,
+  ManyToOne,
 } from 'typeorm';
 import {
   Length,
@@ -13,6 +14,7 @@ import {
   IsOptional,
 } from 'class-validator';
 import { Resource } from './resource';
+import { Address } from './address';
 
 export enum OccurrenceStatus {
   Aberto = 0,
@@ -62,4 +64,7 @@ export class Occurrence extends BaseEntity {
 
   @ManyToMany(() => Resource, (resource) => resource.occurrences)
   resources!: Resource[];
+
+  @ManyToOne(() => Address, (address) => address.occurrences)
+  address!: Address;
 }

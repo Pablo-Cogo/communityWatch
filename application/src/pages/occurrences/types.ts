@@ -13,3 +13,9 @@ export enum Status {
   processando = 1,
   fechado = 2,
 }
+
+export interface OccurrenceForm {
+  occurrencePdfUrl: string | undefined;
+  occurrenceCobradeCode: string;
+  occurrenceDescription: string;
+}
