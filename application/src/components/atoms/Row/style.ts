@@ -13,6 +13,6 @@ export const Row = styled.div<RowProps>`
       : gtc};
 
   @media (max-width: 589px) {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 100% !important;
   }
 `;

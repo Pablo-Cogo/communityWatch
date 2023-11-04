@@ -12,6 +12,7 @@ import {
   IsEnum,
   IsDateString,
   IsOptional,
+  IsEmpty,
 } from 'class-validator';
 import { Resource } from './resource';
 import { Address } from './address';
@@ -24,14 +25,9 @@ export enum OccurrenceStatus {
 
 @Entity('occurrence')
 export class Occurrence extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  private _id!: string;
-
-  get id(): string {
-    return this._id;
-  }
-
-  set id(_: string) {}
+  @PrimaryGeneratedColumn('uuid', { name: 'id' })
+  @IsEmpty({ message: 'não é possivel setar valor no id' })
+  id!: string;
 
   @Column({ type: 'uuid' })
   userId!: string;
@@ -58,7 +54,7 @@ export class Occurrence extends BaseEntity {
   @IsDateString()
   occurrenceFinalDate!: Date;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'longtext' })
   @IsOptional()
   occurrenceLinkPdf!: string;
 

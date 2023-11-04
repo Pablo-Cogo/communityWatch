@@ -71,7 +71,6 @@ export default class Http {
   private handleRequestError(error: any): Error {
     const toastService = ServiceLocator.getToastService();
     if (error.response) {
-      console.log(error.response.data.error);
       if (Array.isArray(error.response.data.error)) {
         error.response.data.error.forEach((err: any) => {
           toastService.addErrorToast(`${err}`);

@@ -16,7 +16,7 @@ export enum OccurrenceStatus {
 
 @Entity('address')
 export class Address extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('uuid', { name: 'id' })
   private _id!: string;
 
   get id(): string {

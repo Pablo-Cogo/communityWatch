@@ -16,4 +16,16 @@ export default class PersonService {
     // userId: string;
     // addressId: string;
   }
+
+  static async getPersonById(id: string): Promise<Person> {
+    const response = await this.http.get<Person>(`/?id=${id}`);
+    return response;
+  }
+
+  static async filterByCpf(cpf: string): Promise<Person> {
+    const response = await this.http.get<Person>(
+      `/filterByCpf?personCPF=${cpf}`
+    );
+    return response;
+  }
 }

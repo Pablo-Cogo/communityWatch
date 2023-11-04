@@ -44,6 +44,7 @@ const AppRouter = () => {
           <Route path="chat" element={<>aaa</>} />
           <Route path="occurrences" element={<Occurrences />} />
           <Route path="occurrences/add" element={<OccurrencesForm />} />
+          <Route path="occurrences/edit/:id" element={<OccurrencesForm />} />
           <Route path="resources" element={<Resources />} />
         </Route>
         <Route

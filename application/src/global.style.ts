@@ -76,6 +76,12 @@ export const GlobalStyle = createGlobalStyle`
       --scrollbar-thumb: rgba(235, 135, 44, 0.9);
       --scrollbar-track: rgb(17, 28, 59);
       --scrollbar-thumb-hover: rgb(235, 135, 44);
+
+      --bg-back-popup: #33333380;
+      --bg-popup: #fff;
+
+      --color-buton-icon-link: #464646;
+      --color-buton-icon-link-selected: rgba(235, 135, 44);
     `}
 
   ${(props) => props.theme.existsRoutes && css``}

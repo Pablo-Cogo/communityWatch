@@ -109,11 +109,14 @@ function BodyGrid<T extends Record<string, any>>({
                           : null
                       }
                       onChange={(e) => checkAllRows(e, configGrid.colPrimary)}
-                      checked={rows?.every((element) =>
-                        idsSelected.includes(
-                          convertEnumToKey(element[configGrid.colPrimary])
+                      checked={
+                        idsSelected?.length > 0 &&
+                        rows?.every((element) =>
+                          idsSelected.includes(
+                            convertEnumToKey(element[configGrid.colPrimary])
+                          )
                         )
-                      )}
+                      }
                       style={{
                         margin: "auto",
                         background: "transparent",

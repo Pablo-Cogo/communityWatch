@@ -1,6 +1,7 @@
 import { EnumProps } from "../../components/molecules/grid/types";
 export interface Occurrence {
-  Id: string;
+  id: string;
+  code: string;
   occurrenceDescription: string;
   occurrenceCobradeCode: string;
   occurrenceStatus: EnumProps;
@@ -8,14 +9,13 @@ export interface Occurrence {
   occurrenceFinalDate: string;
 }
 
-export enum Status {
-  aberto = 0,
-  processando = 1,
-  fechado = 2,
-}
-
 export interface OccurrenceForm {
+  occurrenceUserCPF: string;
   occurrencePdfUrl: string | undefined;
   occurrenceCobradeCode: string;
   occurrenceDescription: string;
+}
+
+export interface OccurrenceFormMask {
+  occurrenceUserCPF: string;
 }

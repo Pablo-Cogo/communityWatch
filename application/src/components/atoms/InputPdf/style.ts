@@ -3,6 +3,8 @@ import styled from "styled-components";
 export const FileContainer = styled.div`
   display: flex;
   position: relative;
+  width: 100%;
+  justify-content: center;
 
   .react-pdf__Page__textContent,
   .react-pdf__Page__annotations {
@@ -15,11 +17,13 @@ export const FileInputContainer = styled.label`
   text-align: center;
   border: 2px dashed grey;
   border-radius: 5px;
-  display: block;
-  padding: 1.2em;
+  display: flex;
+  flex-direction: column;
+  padding: 0.8em;
   transition: border 300ms ease;
   cursor: pointer;
   text-align: center;
+  overflow: hidden;
 
   &:hover,
   &.drag-over {
@@ -62,6 +66,10 @@ export const ThumbnailContainer = styled.div`
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   overflow: hidden;
+
+  canvas {
+    width: 100% !important;
+  }
 `;
 
 export const ButtonsThumbnail = styled.div`
@@ -73,6 +81,10 @@ export const ButtonsThumbnail = styled.div`
   align-items: center;
   justify-content: center;
   gap: 3px;
+
+  @media (max-width: 200px) {
+    flex-direction: column;
+  }
 `;
 
 export const ButtonThumbnail = styled.button`

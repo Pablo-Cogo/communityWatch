@@ -1,4 +1,5 @@
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import ServiceLocator from "../../services/service.locator";
 
 interface ChangeUtils {
   default: <T = any[]>(
@@ -28,9 +29,9 @@ interface ChangeUtils {
     resetMask: (value: string) => string
   ) => void;
   resetForm: <T = any[]>(
-    setValues: Dispatch<SetStateAction<T | never[]>>,
+    setValues: Dispatch<SetStateAction<T>>,
     idFirstElement: string,
-    defaultValues?: T | never[],
+    defaultValues: T,
     checkPopup?: boolean
   ) => void;
 }
@@ -85,39 +86,18 @@ export const change: ChangeUtils = {
     }));
   },
 
-  resetForm: (setValues, idFirstElement, defaultValues, checkPopup = true) => {
+  resetForm: (setValues, idFirstElement, defaultValues) => {
+    const focus = ServiceLocator.getAutoFocusService();
     if (setValues) {
-      if (defaultValues) {
-        setValues(defaultValues);
-      } else {
-        setValues([]);
-      }
+      setValues(defaultValues);
     }
 
     if (document.getElementById(idFirstElement)) {
-      if (checkPopup) {
-        if (!checkPopupOpen()) {
-          setTimeout(() => {
-            document.getElementById(idFirstElement)?.focus();
-          }, 200);
-        }
-      } else {
+      if (focus.getFocus()) {
         setTimeout(() => {
           document.getElementById(idFirstElement)?.focus();
         }, 200);
       }
     }
   },
-};
-
-const checkPopupOpen = () => {
-  let open = false;
-
-  document.querySelectorAll("*[id*=back]").forEach((elem) => {
-    if (window.getComputedStyle(elem).height !== "0px") {
-      open = true;
-    }
-  });
-
-  return open;
 };

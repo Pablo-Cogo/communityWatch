@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import './util/module-alias';
 import { Server } from '@overnightjs/core';
@@ -20,7 +21,15 @@ export class SetupServer extends Server {
   }
 
   private setupExpress(): void {
-    this.app.use(bodyParser.json());
+    this.app.use(bodyParser.json({ limit: '50mb' }));
+    this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+    this.app.use(
+      cors({
+        origin: ['http://localhost:3000'],
+        methods: ['GET', 'POST', 'DELETE', 'PUT'],
+        credentials: true,
+      })
+    );
   }
 
   private setupControllers(): void {

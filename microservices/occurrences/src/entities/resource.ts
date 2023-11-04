@@ -18,7 +18,7 @@ import { Occurrence } from './occurrence';
 
 @Entity('resource')
 export class Resource extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('uuid', { name: 'id' })
   private _id!: string;
 
   get id(): string {

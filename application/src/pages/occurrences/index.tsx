@@ -7,12 +7,17 @@ import {
 import Card from "../../components/molecules/card";
 import Grid from "../../components/molecules/grid";
 import { Column, GridButtonProps } from "../../components/molecules/grid/types";
-import { Occurrence, Status } from "./types";
+import { Occurrence } from "./types";
 import { Format } from "../../helpers/format";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import OccurrenceService from "../../services/occurrence.service";
+import { OccurrenceStatus } from "../../types/occurrence";
 
 const Occurrences = () => {
   const navigate = useNavigate();
+  const [RowsData, setRowsData] = useState<Occurrence[] | null>(null);
+
   const ButtonsGrid: GridButtonProps[] = [
     {
       title: "carregar registros",
@@ -35,7 +40,7 @@ const Occurrences = () => {
     {
       icon: faPencil,
       title: "Editar",
-      action: (id) => navigate(`${id}`),
+      action: (id) => navigate(`edit/${id}`),
     },
     {
       icon: faTrashCan,
@@ -46,165 +51,90 @@ const Occurrences = () => {
 
   const ColumnsGrid: Column<Occurrence>[] = [
     {
-      name: "Código",
-      column: "Id",
-      orderBy: false,
+      columnNotShow: true,
+      name: "Id",
+      column: "id",
     },
     {
-      showOnlySelector: true,
+      name: "Código",
+      column: "code",
+      width: "10%",
+      orderBy: true,
+    },
+    {
       name: "Descrição",
+      width: "40%",
       column: "occurrenceDescription",
     },
     {
       name: "Cod. Cobrade",
+      width: "15%",
       column: "occurrenceCobradeCode",
     },
     {
       name: "Status",
+      width: "15%",
       column: "occurrenceStatus",
     },
     {
       name: "Data inicial",
+      width: "20%",
       column: "occurrenceInitialDate",
     },
     {
+      showOnlySelector: true,
       name: "Data Final",
+      width: "20%",
       column: "occurrenceFinalDate",
     },
   ];
 
-  const RowsData: Occurrence[] = [
-    {
-      Id: "1",
-      occurrenceDescription:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      occurrenceCobradeCode: "1.5.1.4.0",
-      occurrenceStatus: {
-        [Status.aberto]: <div>🟢 Aberto</div>,
-      },
-      occurrenceInitialDate: Format.date.default(new Date(2023, 9, 10)),
-      occurrenceFinalDate: Format.date.default(new Date(2023, 9, 10)),
-    },
-    {
-      Id: "2",
-      occurrenceDescription:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      occurrenceCobradeCode: "2.2.2.2.0",
-      occurrenceStatus: {
-        [Status.fechado]: "🔴 Fechado",
-      },
-      occurrenceInitialDate: Format.date.default(new Date(2023, 9, 10)),
-      occurrenceFinalDate: Format.date.default(new Date(2023, 9, 10)),
-    },
-    {
-      Id: "3",
-      occurrenceDescription:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      occurrenceCobradeCode: "1.5.1.4.0",
-      occurrenceStatus: {
-        [Status.aberto]: "🟢 Aberto",
-      },
-      occurrenceInitialDate: Format.date.default(new Date(2023, 9, 10)),
-      occurrenceFinalDate: Format.date.default(new Date(2023, 9, 10)),
-    },
-    {
-      Id: "4",
-      occurrenceDescription:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      occurrenceCobradeCode: "2.1.2.1.0",
-      occurrenceStatus: {
-        [Status.fechado]: "🔴 Fechado",
-      },
-      occurrenceInitialDate: Format.date.default(new Date(2023, 9, 10)),
-      occurrenceFinalDate: Format.date.default(new Date(2023, 9, 10)),
-    },
-    {
-      Id: "5",
-      occurrenceDescription:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      occurrenceCobradeCode: "2.2.2.2.0",
-      occurrenceStatus: {
-        [Status.aberto]: "🟢 Aberto",
-      },
-      occurrenceInitialDate: Format.date.default(new Date(2023, 9, 10)),
-      occurrenceFinalDate: Format.date.default(new Date(2023, 9, 10)),
-    },
-    {
-      Id: "6",
-      occurrenceDescription:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      occurrenceCobradeCode: "2.5.5.0.0",
-      occurrenceStatus: {
-        [Status.aberto]: "🟢 Aberto",
-      },
-      occurrenceInitialDate: Format.date.default(new Date(2023, 9, 10)),
-      occurrenceFinalDate: Format.date.default(new Date(2023, 9, 10)),
-    },
-    {
-      Id: "7",
-      occurrenceDescription:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      occurrenceCobradeCode: "1.5.1.4.0",
-      occurrenceStatus: {
-        [Status.fechado]: "🔴 Fechado",
-      },
-      occurrenceInitialDate: Format.date.default(new Date(2023, 9, 10)),
-      occurrenceFinalDate: Format.date.default(new Date(2023, 9, 10)),
-    },
-    {
-      Id: "8",
-      occurrenceDescription:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      occurrenceCobradeCode: "2.2.2.2.0",
-      occurrenceStatus: {
-        [Status.aberto]: "🟢 Aberto",
-      },
-      occurrenceInitialDate: Format.date.default(new Date(2023, 9, 10)),
-      occurrenceFinalDate: Format.date.default(new Date(2023, 9, 10)),
-    },
-    {
-      Id: "9",
-      occurrenceDescription:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      occurrenceCobradeCode: "2.4.2.0.0",
-      occurrenceStatus: {
-        [Status.aberto]: "🟢 Aberto",
-      },
-      occurrenceInitialDate: Format.date.default(new Date(2023, 9, 10)),
-      occurrenceFinalDate: Format.date.default(new Date(2023, 9, 10)),
-    },
-    {
-      Id: "10",
-      occurrenceDescription:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      occurrenceCobradeCode: "2.5.5.0.0",
-      occurrenceStatus: {
-        [Status.processando]: "🟡 Processando",
-      },
-      occurrenceInitialDate: Format.date.default(new Date(2023, 9, 10)),
-      occurrenceFinalDate: Format.date.default(new Date(2023, 9, 10)),
-    },
-    {
-      Id: "11",
-      occurrenceDescription:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      occurrenceCobradeCode: "2.4.2.0.0",
-      occurrenceStatus: {
-        [Status.processando]: "🟡 Processando",
-      },
-      occurrenceInitialDate: Format.date.default(new Date(2023, 9, 10)),
-      occurrenceFinalDate: Format.date.default(new Date(2023, 9, 10)),
-    },
-  ];
+  const filterBySatus = (status: OccurrenceStatus) => {
+    switch (status) {
+      case OccurrenceStatus.Aberto:
+        return <div>🟢 Aberto</div>;
+      case OccurrenceStatus.Processando:
+        return <div>🟡 Processando</div>;
+      case OccurrenceStatus.Fechado:
+        return <div>🔴 Fechado</div>;
+    }
+  };
+
+  useEffect(() => {
+    const getOccurrences = async () => {
+      const occurrences = await OccurrenceService.getAllOccurrences();
+      setRowsData(
+        occurrences.map((el, i) => {
+          return {
+            ...el,
+            code: (i + 1).toString(),
+            occurrenceStatus: {
+              [el.occurrenceStatus]: filterBySatus(el.occurrenceStatus),
+            },
+            occurrenceInitialDate: Format.date.default(
+              new Date(el.occurrenceInitialDate)
+            ),
+            occurrenceFinalDate:
+              el.occurrenceFinalDate &&
+              Format.date.default(new Date(el.occurrenceFinalDate)),
+          };
+        })
+      );
+    };
+    getOccurrences();
+  }, []);
 
   return (
     <Card title="Ocorrências">
-      <Grid
-        gridId="Occurrences"
-        gridButtonProps={ButtonsGrid}
-        columns={ColumnsGrid}
-        rows={RowsData}
-      />
+      {RowsData && (
+        <Grid
+          gridId="Occurrences"
+          gridButtonProps={ButtonsGrid}
+          columns={ColumnsGrid}
+          rows={RowsData}
+          configGrid={{ colPrimary: "id" }}
+        />
+      )}
     </Card>
   );
 };
