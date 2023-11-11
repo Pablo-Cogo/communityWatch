@@ -1,6 +1,12 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { SortProps, useColumnFilterContext } from "./columns.context";
-import { Column, EnumProps } from "../types";
+import { Column } from "../types";
 import { PageSizeOption, usePaginateContext } from "./paginate.context";
 import useIsEnumProps from "../hooks/isEnumProps.hook";
 
@@ -29,11 +35,13 @@ const RowsContext = createContext<RowsContextType<any> | undefined>(undefined);
 interface RowsProviderProps<T> {
   children: ReactNode;
   rows?: T[];
+  colPrimary: keyof T;
 }
 
 const RowsProvider = <T extends Record<any, any>>({
   children,
   rows,
+  colPrimary,
 }: RowsProviderProps<T>) => {
   const { columnSort, filteredColumns } = useColumnFilterContext();
   const { atualPage, atualPageSize, filterListPages } = usePaginateContext();
@@ -43,6 +51,7 @@ const RowsProvider = <T extends Record<any, any>>({
   const [idsSelected, setIdsSelected] = useState<(keyof T)[]>([]);
   const [rowsWithAllColumns, setRowsWithAllColumns] = useState<T[]>([]); //linhas sem o filtro das colunas - com orderby e paginate
   const [rowsWithAllRows, setRowsWithAllRows] = useState<T[]>([]); //linhas sem paginação - com orderby
+  const [rowsGrid, setRowsGrid] = useState<T[]>([]); //linhas finais da grid - com orderby, paginate e filteredColumns
   const [totalPages, setTotalPages] = useState<number>(0);
 
   const removeEnumProps = (rows: T[]) => {
@@ -152,14 +161,18 @@ const RowsProvider = <T extends Record<any, any>>({
       colSort.column && colSort.asc !== undefined
         ? orderRowsDefault(colSort.column, colSort.asc)
         : rows ?? [];
+
+    const filteredIds = idsSelected.filter((id) =>
+      rowsOrdered.some((el) => el[colPrimary] === id)
+    );
+    setIdsSelected(filteredIds);
+
     setRowsWithAllRows(rowsOrdered);
     const pagedRows = paginateRows(rowsOrdered, page, pageSize);
     setRowsWithAllColumns(pagedRows);
     const rowsWithoutColumns = removeColumn(pagedRows, columns);
     return removeEnumProps(rowsWithoutColumns);
   };
-
-  const [rowsGrid, setRowsGrid] = useState<T[]>(() => filterRowsDefault()); //linhas finais da grid - com orderby, paginate e filteredColumns
 
   const filterRows = (
     columns: Column<T>[],
@@ -215,6 +228,12 @@ const RowsProvider = <T extends Record<any, any>>({
       e.preventDefault();
     }
   };
+
+  useEffect(() => {
+    const rowsD = filterRowsDefault();
+    setRowsGrid(rowsD);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows]);
 
   const contextValue: RowsContextType<T> = {
     filterRows,

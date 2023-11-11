@@ -28,10 +28,10 @@ interface ChangeUtils {
     mask: (value: string) => string,
     resetMask: (value: string) => string
   ) => void;
-  resetForm: <T = any[]>(
-    setValues: Dispatch<SetStateAction<T>>,
-    idFirstElement: string,
-    defaultValues: T,
+  resetForm: <T extends Record<string, any>>(
+    setValues: Dispatch<SetStateAction<T | null>>,
+    idFirstElement: keyof T,
+    defaultValues: T | null,
     checkPopup?: boolean
   ) => void;
 }
@@ -88,14 +88,15 @@ export const change: ChangeUtils = {
 
   resetForm: (setValues, idFirstElement, defaultValues) => {
     const focus = ServiceLocator.getAutoFocusService();
+    const element = document.getElementById(idFirstElement.toString());
     if (setValues) {
       setValues(defaultValues);
     }
 
-    if (document.getElementById(idFirstElement)) {
+    if (element) {
       if (focus.getFocus()) {
         setTimeout(() => {
-          document.getElementById(idFirstElement)?.focus();
+          element.focus();
         }, 200);
       }
     }

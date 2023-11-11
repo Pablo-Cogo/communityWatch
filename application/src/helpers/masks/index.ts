@@ -1,24 +1,24 @@
 export const masks = {
   text: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value
       .replace(/\d/g, "")
       .replace(/[["'!@#$%¨&*()_+={}\]ªº?°:;.,<>\\|\/-]/g, "");
   },
 
   textNumber: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value.replace(/[["'!@#$%¨*()_+={}\]:;.,<>\\|\/-]/g, "");
   },
 
   number: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value.replace(/\D/g, "");
   },
 
   numberWithNegative: (value: string): string => {
     let hasNegative = false;
-    value = new String(value) as string;
+    value = value.toString();
     if (value.split("")[0] === "-") {
       hasNegative = true;
     }
@@ -30,12 +30,16 @@ export const masks = {
   },
 
   float: (value: string): string => {
-    value = new String(value) as string;
-    return value.replace(/[^0-9.]/g, "");
+    value = value.toString();
+    value = value.replace(".", ",");
+    if (value.split(",").length > 2) {
+      return value.replace(",", "");
+    }
+    return value.replace(/[^0-9,]/g, "");
   },
 
   codMask: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value
       .replace(/\D/g, "")
       .replace(/(\d{1})(\d)/, "$1 $2")
@@ -44,7 +48,7 @@ export const masks = {
   },
 
   cpfMask: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value
       .replace(/\D/g, "")
       .replace(/(\d{3})(\d)/, "$1.$2")
@@ -54,7 +58,7 @@ export const masks = {
   },
 
   cnpjMask: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value
       .replace(/\D/g, "")
       .replace(/(\d{2})(\d)/, "$1.$2")
@@ -65,7 +69,7 @@ export const masks = {
   },
 
   phoneMask: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value
       .replace(/\D/g, "")
       .replace(/(\d{2})(\d)/, "($1)$2")
@@ -75,7 +79,7 @@ export const masks = {
   },
 
   cepMask: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value
       .replace(/\D/g, "")
       .replace(/(\d{5})(\d)/g, "$1-$2")
@@ -83,7 +87,7 @@ export const masks = {
   },
 
   residence: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value
       .replace(/[["'!@#$%¨&*()_+={}\]ªº?°:;.,<>\\|\/-]/g, "")
       .replace(/(\D{1})\D+?$/, "$1")
@@ -91,7 +95,7 @@ export const masks = {
   },
 
   dataMask: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value
       .replace(/\D/g, "")
       .replace(/(\d{2})(\d)/, "$1/$2") // Coloca uma barra entre o segundo e o terceiro dígitos
@@ -100,7 +104,7 @@ export const masks = {
   },
 
   resetDataMask: (value: string | string[]): string => {
-    value = new String(value) as string;
+    value = value.toString();
     value = value.split("/");
     if (
       value[0] !== undefined &&
@@ -119,7 +123,7 @@ export const masks = {
   },
 
   qtdeMask: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value
       .replace(/\D/g, "")
       .replace(/(.\d{9})\d+?$/, "$1")
@@ -138,12 +142,12 @@ export const masks = {
   },
 
   resetQtdeMask: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value.replace(/\D/g, "").replace(".", "");
   },
 
   valMask: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value
       .replace(/\D/g, "")
       .replace(/(.\d{8})\d+?$/, "$1")
@@ -153,7 +157,7 @@ export const masks = {
   },
 
   resetValMask: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value
       .replace(/\D/g, "")
       .replace(",", "")
@@ -162,8 +166,18 @@ export const masks = {
       .replace(/(\d{1})(\d{1,2})$/, "$1.$2");
   },
 
+  resetFloatMask: (value: string): string => {
+    value = value.toString();
+    return value
+      .replace(/[^0-9,]/g, "")
+      .replace(",", ".")
+      .replace(" ", "")
+      .replace("/", "")
+      .replace("-", "");
+  },
+
   resetMask: (value: string): string => {
-    value = new String(value) as string;
+    value = value.toString();
     return value
       .replace(/\D/g, "") // permite digitar apenas número
       .replace(".", "")

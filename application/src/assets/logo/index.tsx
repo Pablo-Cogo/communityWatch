@@ -13,7 +13,7 @@ const Logo = ({ className }: LogoProps) => {
         fill-rule="none"
         stroke="none"
         stroke-width="1"
-        stroke-linecap="butt"
+        strokeLinecap="butt"
         stroke-linejoin="miter"
         stroke-miterlimit="10"
         stroke-dasharray=""

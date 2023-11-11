@@ -30,7 +30,7 @@ function Grid<T extends Record<string, any>>({
   });
 
   return (
-    <GridProvider columns={columns} rows={rows}>
+    <GridProvider columns={columns} rows={rows} configGrid={configGridDefault}>
       <Widget>
         <HeaderGrid
           gridId={gridId}

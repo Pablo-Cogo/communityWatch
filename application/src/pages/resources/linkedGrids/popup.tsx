@@ -1,6 +1,7 @@
 import Popup from "../../../components/molecules/popup";
 import UnlinkedResourcesGrid from "./unlinkedResources";
 import LinkedResourcesGrid from "./linkedResources";
+import { useEffect, useRef, useState } from "react";
 
 interface PopupProps {
   isOpen: boolean;
@@ -8,6 +9,17 @@ interface PopupProps {
 }
 
 const PopupLinkedGrids = ({ isOpen, close }: PopupProps) => {
+  const [changeGrid, setChangeGrid] = useState<boolean>(false);
+  const changeRef = useRef<boolean>(changeGrid);
+
+  const handleChangeGrid = () => {
+    setChangeGrid(!changeRef.current);
+  };
+
+  useEffect(() => {
+    changeRef.current = changeGrid;
+  }, [changeGrid]);
+
   return (
     <Popup
       title="Vincular recursos"
@@ -18,8 +30,14 @@ const PopupLinkedGrids = ({ isOpen, close }: PopupProps) => {
       titleButtonConfirm=""
     >
       <div className="flex gap-x-[10px]">
-        <UnlinkedResourcesGrid />
-        <LinkedResourcesGrid />
+        <UnlinkedResourcesGrid
+          changeGrid={changeGrid}
+          change={handleChangeGrid}
+        />
+        <LinkedResourcesGrid
+          changeGrid={changeGrid}
+          change={handleChangeGrid}
+        />
       </div>
     </Popup>
   );

@@ -5,7 +5,7 @@ import { Row } from "../../components/atoms/Row/style";
 import PdfInput from "../../components/atoms/InputPdf";
 import { OccurrenceForm, OccurrenceFormMask } from "./types";
 import OccurrenceService from "../../services/occurrence.service";
-import { OccurrenceStatus } from "../../types/occurrence";
+import { Occurrence, OccurrenceStatus } from "../../types/occurrence";
 import { change } from "../../helpers/change";
 import { masks } from "../../helpers/masks";
 import PersonService from "../../services/person.service";
@@ -45,18 +45,14 @@ const OccurrencesForm = () => {
       };
       setOccurrenceView();
     } else {
-      change.resetForm<OccurrenceForm | null>(
-        setValues,
-        "occurrenceUserCPF",
-        null
-      );
+      change.resetForm<OccurrenceForm>(setValues, "occurrenceUserCPF", null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    var occurrence: void | Occurrence;
     const person = await PersonService.filterByCpf(
       values?.occurrenceUserCPF ?? ""
     );
@@ -66,18 +62,31 @@ const OccurrencesForm = () => {
       );
       return;
     }
-    const occurrence = await OccurrenceService.registerOccurrence({
-      occurrenceCobradeCode: values?.occurrenceCobradeCode ?? "",
-      occurrenceDescription: values?.occurrenceDescription ?? "",
-      occurrenceStatus: OccurrenceStatus.Aberto,
-      occurrenceInitialDate: new Date(),
-      userId: person.userId,
-      occurrenceLinkPdf: values?.occurrencePdfUrl,
-    });
-
-    if (occurrence) {
-      navigate(`/adm/occurrences/edit/${occurrence.id}`);
-      toastService.addSuccessToast("Ocorrência cadastrada com sucesso.");
+    if (occurrenceId) {
+      occurrence = await OccurrenceService.editOccurrence(occurrenceId, {
+        occurrenceCobradeCode: values?.occurrenceCobradeCode ?? "",
+        occurrenceDescription: values?.occurrenceDescription ?? "",
+        occurrenceStatus: OccurrenceStatus.Aberto,
+        occurrenceInitialDate: new Date(),
+        userId: person.userId,
+        occurrenceLinkPdf: values?.occurrencePdfUrl,
+      });
+      if (occurrence) {
+        toastService.addSuccessToast("Occorrencia alterada com sucesso.");
+      }
+    } else {
+      occurrence = await OccurrenceService.registerOccurrence({
+        occurrenceCobradeCode: values?.occurrenceCobradeCode ?? "",
+        occurrenceDescription: values?.occurrenceDescription ?? "",
+        occurrenceStatus: OccurrenceStatus.Aberto,
+        occurrenceInitialDate: new Date(),
+        userId: person.userId,
+        occurrenceLinkPdf: values?.occurrencePdfUrl,
+      });
+      if (occurrence) {
+        toastService.addSuccessToast("Ocorrência cadastrada com sucesso.");
+        navigate(`/adm/occurrences/edit/${occurrence.id}`);
+      }
     }
   };
   return (
@@ -132,9 +141,18 @@ const OccurrencesForm = () => {
               onChange={(e) => change.noMask(e, setValues)}
             />
             <div className="w-full flex justify-end mt-3">
-              <Button type="submit" className="w-52">
-                Salvar
-              </Button>
+              <Row gtc={2} colgap="10px">
+                <Button
+                  typing="primary"
+                  variant="outline"
+                  onClick={() => navigate("/adm/occurrences")}
+                >
+                  Voltar
+                </Button>
+                <Button type="submit" className="w-52">
+                  Salvar
+                </Button>
+              </Row>
             </div>
           </div>
         </Row>

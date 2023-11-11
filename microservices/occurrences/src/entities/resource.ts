@@ -13,19 +13,15 @@ import {
   IsNumber,
   Min,
   IsOptional,
+  IsEmpty,
 } from 'class-validator';
 import { Occurrence } from './occurrence';
 
 @Entity('resource')
 export class Resource extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid', { name: 'id' })
-  private _id!: string;
-
-  get id(): string {
-    return this._id;
-  }
-
-  set id(_: string) {}
+  @PrimaryGeneratedColumn('uuid')
+  @IsEmpty({ message: 'não é possivel setar valor no id' })
+  id!: string;
 
   @Column()
   @IsNotEmpty()

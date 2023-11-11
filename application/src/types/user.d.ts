@@ -35,6 +35,10 @@ export interface SignUpMailProps {
   userImage?: string;
 }
 
+export interface SignUpMailMasksProps {
+  userCpf?: string;
+}
+
 export enum UserRole {
   admin = 0,
   employee = 1,

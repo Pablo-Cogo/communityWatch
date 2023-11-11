@@ -5,41 +5,60 @@ import { Input } from "../../../components/atoms/Input";
 import { DangerLink } from "../../../components/molecules/dangerLink";
 import SignUpContainer from "../../../components/organisms/signup";
 import { useGoogleContext } from "../../../contexts/google.context";
-import { SignUpMailProps } from "../../../types/user";
+import { SignUpMailMasksProps, SignUpMailProps } from "../../../types/user";
 import { change } from "../../../helpers/change";
 import { useUserContext } from "../../../contexts/user.context";
 import { masks } from "../../../helpers/masks";
 import ServiceLocator from "../../../services/service.locator";
+import HelperService from "../../../helpers/validators";
 
 const MailSignUp = () => {
   const { getUserGoogle } = useGoogleContext();
-  const { encodeMailSignUp } = useUserContext();
+  const { encodeMailSignUp, getMailSignUp } = useUserContext();
   const [userSignUp, setUserSignUp] = useState<SignUpMailProps | null>(null);
   const [hasGoogle, setHasGoogle] = useState<boolean | null>(null);
   const [userSignUpMarkered, setUserSignUpMaskered] =
-    useState<SignUpMailProps | null>(null);
+    useState<SignUpMailMasksProps | null>(null);
   useEffect(() => {
     const fetchData = async () => {
-      getUserGoogle().then((response) => {
+      getMailSignUp().then((response) => {
         if (response) {
           setUserSignUp({
+            userCpf: response.userCpf,
+            userDate: response.userDate,
             userName: response.userName,
             userEmail: response.userEmail,
-            userImage: response.userImage ?? "",
+            userImage: response.userImage,
+            personPhone: response.personPhone,
           });
-          setHasGoogle(true);
-        } else {
-          setHasGoogle(false);
+          setUserSignUpMaskered({
+            userCpf: masks.cpfMask(response.userCpf ?? ""),
+          });
         }
       });
+      if (!userSignUp) {
+        getUserGoogle().then((response) => {
+          if (response) {
+            setUserSignUp({
+              userName: response.userName,
+              userEmail: response.userEmail,
+              userImage: response.userImage ?? "",
+            });
+            setHasGoogle(true);
+          } else {
+            setHasGoogle(false);
+          }
+        });
+      }
     };
     fetchData();
-  }, [getUserGoogle]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      if (userSignUp)
+      if (userSignUp) {
         encodeMailSignUp({
           userName: userSignUp.userName,
           userEmail: userSignUp.userEmail,
@@ -49,6 +68,7 @@ const MailSignUp = () => {
           userCpf: userSignUp.userCpf,
           userDate: userSignUp.userDate,
         });
+      }
     }
   };
 
@@ -65,6 +85,9 @@ const MailSignUp = () => {
       return false;
     } else if (!userSignUp?.userEmail) {
       toastService.addErrorToast("Campo: Email obrigatório.");
+      return false;
+    } else if (!HelperService.isValidateCPF(userSignUp?.userCpf)) {
+      toastService.addErrorToast("Campo: CPF inválido.");
       return false;
     }
     if (hasGoogle === false) {

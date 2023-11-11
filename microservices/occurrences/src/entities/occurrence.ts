@@ -25,7 +25,7 @@ export enum OccurrenceStatus {
 
 @Entity('occurrence')
 export class Occurrence extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid', { name: 'id' })
+  @PrimaryGeneratedColumn('uuid')
   @IsEmpty({ message: 'não é possivel setar valor no id' })
   id!: string;
 

@@ -15,6 +15,7 @@ import { Address } from "../../../types/address";
 import UserService from "../../../services/user.service";
 import AddressService from "../../../services/address.service";
 import PersonService from "../../../services/person.service";
+import { Format } from "../../../helpers/format";
 
 const AddressSignUp = () => {
   const { getMailSignUp } = useUserContext();
@@ -28,11 +29,11 @@ const AddressSignUp = () => {
     const fetchData = async () => {
       getMailSignUp().then((response) => {
         if (response) {
-          console.log(response);
           setUserSignUp({
             userCpf: response.userCpf,
             userDate: response.userDate,
             userName: response.userName,
+            userPassword: response.userPassword,
             userEmail: response.userEmail,
             userImage: response.userImage,
             personPhone: response.personPhone,
@@ -60,13 +61,13 @@ const AddressSignUp = () => {
             addressZipCode: values.addressZipCode,
           });
 
-          console.log(userSignUp.userImage);
+          console.log(userSignUp);
 
           const user = await UserService.registerUser({
             userName: userSignUp.userName,
             userEmail: userSignUp.userEmail,
             userRole: 2,
-            userPassword: null,
+            userPassword: userSignUp.userPassword ?? null,
             userImage: userSignUp.userImage,
           });
 
@@ -76,7 +77,9 @@ const AddressSignUp = () => {
             userId: user.id ?? "",
             personCPF: userSignUp.userCpf ?? "",
             personFullName: userSignUp.userName,
-            personBirth: new Date(userSignUp.userDate ?? ""),
+            personBirth: new Date(
+              masks.resetDataMask(userSignUp.userDate ?? "")
+            ),
           });
 
           if (address && user && person) {
@@ -89,7 +92,7 @@ const AddressSignUp = () => {
             );
           }
         } catch (err) {
-          console.log(err);
+          console.log("Implementar deleção de usuário.");
         }
       }
     }

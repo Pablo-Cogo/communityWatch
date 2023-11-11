@@ -1,7 +1,6 @@
 import { EnumProps } from "../../components/molecules/grid/types";
 export interface Occurrence {
   id: string;
-  code: string;
   occurrenceDescription: string;
   occurrenceCobradeCode: string;
   occurrenceStatus: EnumProps;

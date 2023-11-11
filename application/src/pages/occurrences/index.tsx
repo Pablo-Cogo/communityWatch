@@ -13,10 +13,42 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import OccurrenceService from "../../services/occurrence.service";
 import { OccurrenceStatus } from "../../types/occurrence";
+import ServiceLocator from "../../services/service.locator";
 
 const Occurrences = () => {
   const navigate = useNavigate();
+  const toastService = ServiceLocator.getToastService();
+
   const [RowsData, setRowsData] = useState<Occurrence[] | null>(null);
+
+  const getOccurrences = async () => {
+    const occurrences = await OccurrenceService.getAllOccurrences();
+    setRowsData(
+      occurrences.map((el, i) => {
+        return {
+          ...el,
+          occurrenceStatus: {
+            [el.occurrenceStatus]: filterBySatus(el.occurrenceStatus),
+          },
+          occurrenceInitialDate: Format.date.default(
+            new Date(el.occurrenceInitialDate)
+          ),
+          occurrenceFinalDate:
+            el.occurrenceFinalDate &&
+            Format.date.default(new Date(el.occurrenceFinalDate)),
+        };
+      })
+    );
+  };
+
+  const deleteOccurrence = async (id: string) => {
+    console.log(id);
+    const response = await OccurrenceService.deleteOccurrence(id);
+    if (response) {
+      await getOccurrences();
+      toastService.addSuccessToast("Ocorrencia deletada com sucesso!");
+    }
+  };
 
   const ButtonsGrid: GridButtonProps[] = [
     {
@@ -45,7 +77,7 @@ const Occurrences = () => {
     {
       icon: faTrashCan,
       title: "Deletar",
-      action: (id) => navigate(`${id}`),
+      action: (id) => deleteOccurrence(`${id}`),
     },
   ];
 
@@ -54,12 +86,6 @@ const Occurrences = () => {
       columnNotShow: true,
       name: "Id",
       column: "id",
-    },
-    {
-      name: "Código",
-      column: "code",
-      width: "10%",
-      orderBy: true,
     },
     {
       name: "Descrição",
@@ -101,27 +127,8 @@ const Occurrences = () => {
   };
 
   useEffect(() => {
-    const getOccurrences = async () => {
-      const occurrences = await OccurrenceService.getAllOccurrences();
-      setRowsData(
-        occurrences.map((el, i) => {
-          return {
-            ...el,
-            code: (i + 1).toString(),
-            occurrenceStatus: {
-              [el.occurrenceStatus]: filterBySatus(el.occurrenceStatus),
-            },
-            occurrenceInitialDate: Format.date.default(
-              new Date(el.occurrenceInitialDate)
-            ),
-            occurrenceFinalDate:
-              el.occurrenceFinalDate &&
-              Format.date.default(new Date(el.occurrenceFinalDate)),
-          };
-        })
-      );
-    };
     getOccurrences();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

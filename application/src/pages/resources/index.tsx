@@ -1,13 +1,47 @@
-import { faAdd, faPencil, faRotate, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import Card from '../../components/molecules/card';
-import Grid from '../../components/molecules/grid';
-import { Column, GridButtonProps } from '../../components/molecules/grid/types';
-import { masks } from '../../helpers/masks';
-import { Resource } from './types';
-import { useNavigate } from 'react-router-dom';
+import {
+  faAdd,
+  faPencil,
+  faRotate,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
+import Card from "../../components/molecules/card";
+import Grid from "../../components/molecules/grid";
+import { Column, GridButtonProps } from "../../components/molecules/grid/types";
+import { masks } from "../../helpers/masks";
+import { Resource } from "./types";
+import { useNavigate } from "react-router-dom";
+import ResourceService from "../../services/resouce.service";
+import { useEffect, useState } from "react";
+import ServiceLocator from "../../services/service.locator";
 
 const Resources = () => {
+  const toastService = ServiceLocator.getToastService();
   const navigate = useNavigate();
+  const [RowsData, setRowsData] = useState<Resource[] | null>(null);
+
+  const getResources = async () => {
+    const resources = await ResourceService.getAllResources();
+    setRowsData(
+      resources.map((el, i) => {
+        return {
+          ...el,
+          resourcePrice: "R$ " + masks.valMask(el.resourcePrice.toString()),
+          resourceQuantity: masks.float(el.resourceQuantity.toString()),
+          resourceReserved: masks.float((el.resourceReserved ?? 0).toString()),
+        };
+      })
+    );
+  };
+
+  const deleteResource = async (id: string) => {
+    if (id) {
+      const isDeleted = await ResourceService.deleteResource(id);
+      if (isDeleted) {
+        getResources();
+        toastService.addSuccessToast("Recurso deletado com sucesso.");
+      }
+    }
+  };
 
   const ButtonsGrid: GridButtonProps[] = [
     {
@@ -18,7 +52,7 @@ const Resources = () => {
     },
     {
       icon: faAdd,
-      action: (id) => console.log(id),
+      action: (id) => navigate(`add`),
       title: "Inserir",
       inToolbar: true,
     },
@@ -31,25 +65,25 @@ const Resources = () => {
     {
       icon: faPencil,
       title: "Editar",
-      action: (id) => navigate(`${id}`),
+      action: (id) => navigate(`edit/${id}`),
     },
     {
       icon: faTrashCan,
       title: "Deletar",
-      action: (id) => navigate(`${id}`),
+      action: (id) => deleteResource(`${id}`),
     },
   ];
 
-  
   const ColumnsGrid: Column<Resource>[] = [
     {
-      name: "Código",
+      columnNotShow: true,
+      name: "Id",
       column: "id",
-      orderBy: false,
     },
     {
       name: "Nome",
       column: "resourceName",
+      orderBy: true,
     },
     {
       name: "Preço",
@@ -58,29 +92,31 @@ const Resources = () => {
     {
       name: "Quantidade",
       column: "resourceQuantity",
-    }
-  ]
-
-  const RowsData: Resource[] = [
-    {
-      id: 1,
-      resourceName: "Produto",
-      resourcePrice: "R$ " + masks.valMask("10.51"),
-      resourceQuantity: masks.float("113.2"),
     },
-  ]
+    {
+      showOnlySelector: true,
+      name: "Recursos reservados",
+      column: "resourceReserved",
+    },
+  ];
 
+  useEffect(() => {
+    getResources();
+  }, []);
 
   return (
     <Card title="Recursos">
-      <Grid
-        gridId="Occurrences"
-        gridButtonProps={ButtonsGrid}
-        columns={ColumnsGrid}
-        rows={RowsData}
-      />
+      {RowsData && (
+        <Grid
+          gridId="Occurrences"
+          gridButtonProps={ButtonsGrid}
+          columns={ColumnsGrid}
+          rows={RowsData}
+          configGrid={{ colPrimary: "id" }}
+        />
+      )}
     </Card>
   );
-}
+};
 
-export default Resources
+export default Resources;

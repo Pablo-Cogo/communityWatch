@@ -36,6 +36,7 @@ export default class UserService {
   }
 
   static async encodeMailSignUp(user: SignUpMailProps): Promise<void> {
+    console.log(user);
     const token = await this.encodeJsonToken<SignUpMailProps>(user);
     if (token) sessionStorage.setItem("mailSignUp", token);
   }
