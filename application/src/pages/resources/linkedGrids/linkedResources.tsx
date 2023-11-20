@@ -83,6 +83,11 @@ const LinkedResourcesGrid = ({ changeGrid, change }: LinkedGridProps) => {
       name: "Quantidade",
       column: "resourceQuantity",
     },
+    {
+      showOnlySelector: true,
+      name: "Quantidade reservada",
+      column: "resourceReserved",
+    },
   ];
   return (
     <>
