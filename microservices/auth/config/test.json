@@ -1,7 +1,7 @@
 {
   "App": {
     "database": {
-      "mongoUrl": "mongodb://172.17.0.2:27017/communityWatch-auth-test"
+      "mongoUrl": "mongodb://172.17.0.1:27017/communityWatch-auth-test"
     },
     "auth": {
       "key": "some-key",
