@@ -25,9 +25,12 @@ const Resources = () => {
       resources.map((el, i) => {
         return {
           ...el,
-          resourcePrice: "R$ " + masks.valMask(el.resourcePrice.toString()),
-          resourceQuantity: masks.float(el.resourceQuantity.toString()),
-          resourceReserved: masks.float((el.resourceReserved ?? 0).toString()),
+          resourcePrice:
+            "R$ " + masks.valMask(el.resourcePrice?.toString() ?? ""),
+          resourceQuantity: masks.float(el.resourceQuantity?.toString() ?? ""),
+          resourceReserved: masks.float(
+            (el.resourceReserved ?? 0)?.toString() ?? ""
+          ),
         };
       })
     );

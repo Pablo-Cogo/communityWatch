@@ -31,12 +31,16 @@ const ResourcesForm = () => {
         setResourceId(id);
         setValues({
           resourceName: resource.resourceName,
-          resourcePrice: resource.resourcePrice.toString(),
-          resourceQuantity: resource.resourceQuantity.toString(),
+          resourcePrice: resource.resourcePrice?.toString() ?? "",
+          resourceQuantity: resource.resourceQuantity?.toString() ?? "",
         });
         setValuesMask({
-          resourcePrice: masks.valMask(resource.resourcePrice.toString()),
-          resourceQuantity: masks.float(resource.resourceQuantity.toString()),
+          resourcePrice: masks.valMask(
+            resource.resourcePrice?.toString() ?? ""
+          ),
+          resourceQuantity: masks.float(
+            resource.resourceQuantity?.toString() ?? ""
+          ),
         });
       };
       setResourceView();

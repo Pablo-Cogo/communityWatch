@@ -40,7 +40,7 @@ const OccurrencesForm = () => {
           occurrenceUserCPF: person.personCPF,
         });
         setValuesMask({
-          occurrenceUserCPF: masks.cpfMask(person.personCPF),
+          occurrenceUserCPF: masks.cpfMask(person.personCPF ?? ""),
         });
       };
       setOccurrenceView();

@@ -16,6 +16,7 @@ import Main from "../components/organisms/main";
 import Resources from "../pages/resources";
 import OccurrencesForm from "../pages/occurrences/form";
 import ResourcesForm from "../pages/resources/form";
+import Chat from "../pages/chat";
 
 const AppRouter = () => {
   return (
@@ -42,7 +43,7 @@ const AppRouter = () => {
           }
         >
           <Route index element={<Dashboard />} />
-          <Route path="chat" element={<>aaa</>} />
+          <Route path="chat" element={<Chat />} />
           <Route path="occurrences" element={<Occurrences />} />
           <Route path="occurrences/add" element={<OccurrencesForm />} />
           <Route path="occurrences/edit/:id" element={<OccurrencesForm />} />
