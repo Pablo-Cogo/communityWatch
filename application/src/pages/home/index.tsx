@@ -19,10 +19,15 @@ const Home = () => {
           <div className="flex justify-between items-center gap-x-10">
             <div className="w-[50%]">
               <h1 className="text-[orange] font-bold text-4xl">Titulo</h1>
-              <h2 className="text-white text-xs">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis quos voluptatibus, totam cupiditate, unde cumque assumenda suscipit labore ducimus dignissimos consequuntur non tempora corrupti iusto ipsum inventore. Totam, deleniti animi!</h2>
+              <h2 className="text-white text-xs">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis
+                quos voluptatibus, totam cupiditate, unde cumque assumenda
+                suscipit labore ducimus dignissimos consequuntur non tempora
+                corrupti iusto ipsum inventore. Totam, deleniti animi!
+              </h2>
             </div>
             <div className="w-[50%]">
-              <img className="w-full" src="https://www.alura.com.br/assets/img/alura2023/home/formations-sub.1687365821.png"/>
+              <img className="w-full" src={image} />
             </div>
           </div>
           {/* <span
