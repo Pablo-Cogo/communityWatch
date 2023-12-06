@@ -15,12 +15,16 @@ const Home = () => {
     <section className="h-full">
       <ExternalHeader />
       <main className="flex items-center w-full h-full bg-black pt-[100px] max-[780px]:pt-[20%]">
-        <img
-          src={image}
-          alt=""
-          className="h-full object-cover absolute w-full top-0 left-[30%] filter contrast-50 rounded-[10px]"
-        />
-        <Container className="w-full flex justify-between items-start py-[20px] relative">
+        <Container className="w-full py-[20px] relative">
+          <div className="flex justify-between items-center gap-x-10">
+            <div className="w-[50%]">
+              <h1 className="text-[orange] font-bold text-4xl">Titulo</h1>
+              <h2 className="text-white text-xs">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis quos voluptatibus, totam cupiditate, unde cumque assumenda suscipit labore ducimus dignissimos consequuntur non tempora corrupti iusto ipsum inventore. Totam, deleniti animi!</h2>
+            </div>
+            <div className="w-[50%]">
+              <img className="w-full" src="https://www.alura.com.br/assets/img/alura2023/home/formations-sub.1687365821.png"/>
+            </div>
+          </div>
           {/* <span
             style={{ fontSize: "70px" }}
             className="w-[50%] h-full flex flex-col justify-center text-white"
