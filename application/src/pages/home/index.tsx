@@ -1,33 +1,32 @@
-import { useLoadScript } from "@react-google-maps/api";
-import { Button } from "../../components/atoms/Button";
 import ExternalHeader from "../../components/organisms/header/external";
 import { Container } from "../../components/organisms/header/external/style";
-import Map from "../../components/organisms/map";
 import image from "../../assets/walpaper/walpaper-home.jpg";
+import { ContainerHome, MainHome } from "./style";
 
 const Home = () => {
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyB6G-WhrxCon1Blj9gMxjkTX19AhEnkkU8",
-    libraries: ["places"],
-  });
-  if (!isLoaded) return <div>Loading...</div>;
   return (
-    <section className="h-full">
+    <ContainerHome>
       <ExternalHeader />
-      <main className="flex items-center w-full h-full bg-black pt-[100px] max-[780px]:pt-[20%]">
-        <Container className="w-full py-[20px] relative">
-          <div className="flex justify-between items-center gap-x-10">
-            <div className="w-[50%]">
-              <h1 className="text-[orange] font-bold text-4xl">Titulo</h1>
-              <h2 className="text-white text-xs">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis
-                quos voluptatibus, totam cupiditate, unde cumque assumenda
-                suscipit labore ducimus dignissimos consequuntur non tempora
-                corrupti iusto ipsum inventore. Totam, deleniti animi!
+      <MainHome className="flex items-center w-full h-full">
+        <Container className="w-full relative">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-x-10 h-full">
+            <div className="w-full sm:w-[50%]">
+              <h1 className="text-white text-6xl text-center sm:text-start mb-[12px]">
+                Juntos somos mais <span className="text-[orange]">Fortes</span>
+              </h1>
+              <h2 className="text-[#9094a6] text-base text-justify">
+                Unindo Corações e Mãos para Construir uma Rede de Proteção que
+                Envolva Comunidades, Resista às Adversidades e Desperte a Força
+                da Resiliência. Junte-se a Nós Nesta Jornada de Compromisso e
+                Esperança.
               </h2>
             </div>
-            <div className="w-[50%]">
-              <img className="w-full" src={image} />
+            <div className="w-full sm:w-[50%] absolute bottom-0 right-0">
+              <img
+                className="w-full sm:scale-[1.8] origin-bottom"
+                src={image}
+                alt=""
+              />
             </div>
           </div>
           {/* <span
@@ -43,8 +42,8 @@ const Home = () => {
 
           {/* <Map /> */}
         </Container>
-      </main>
-    </section>
+      </MainHome>
+    </ContainerHome>
   );
 };
 

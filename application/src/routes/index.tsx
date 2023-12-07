@@ -17,6 +17,7 @@ import Resources from "../pages/resources";
 import OccurrencesForm from "../pages/occurrences/form";
 import ResourcesForm from "../pages/resources/form";
 import Chat from "../pages/chat";
+import MapView from "../pages/map";
 
 const AppRouter = () => {
   return (
@@ -24,6 +25,7 @@ const AppRouter = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/map" element={<MapView />} />
         <Route path="/signup/new" element={<MailSignUp />} />
         <Route path="/signup/address" element={<AddressSignUp />} />
         <Route path="/login" element={<Login />} />

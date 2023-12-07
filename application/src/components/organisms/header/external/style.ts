@@ -4,6 +4,7 @@ export const Header = styled.header`
   width: 100%;
   position: fixed;
   z-index: 4;
+  grid-area: header;
 `;
 
 export const Container = styled.div`

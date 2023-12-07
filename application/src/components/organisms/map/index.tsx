@@ -4,18 +4,15 @@ import {
   Marker,
   DirectionsRenderer,
   Circle,
-  MarkerClusterer,
 } from "@react-google-maps/api";
-import Places from "./places";
-import Distance from "./distance";
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 type DirectionsResult = google.maps.DirectionsResult;
 type MapOptions = google.maps.MapOptions;
 
 export default function Map() {
-  const [office, setOffice] = useState<LatLngLiteral>();
-  const [directions, setDirections] = useState<DirectionsResult>();
+  const [office] = useState<LatLngLiteral>();
+  const [directions] = useState<DirectionsResult>();
   const mapRef = useRef<GoogleMap>();
   const center = useMemo<LatLngLiteral>(
     () => ({ lat: 43.45, lng: -80.49 }),
@@ -29,29 +26,10 @@ export default function Map() {
     }),
     []
   );
-  const onLoad = useCallback((map:any) => (mapRef.current = map), []);
-  const houses = useMemo(() => generateHouses(center), [center]);
-
-  const fetchDirections = (house: LatLngLiteral) => {
-    if (!office) return;
-
-    const service = new google.maps.DirectionsService();
-    service.route(
-      {
-        origin: house,
-        destination: office,
-        travelMode: google.maps.TravelMode.DRIVING,
-      },
-      (result, status) => {
-        if (status === "OK" && result) {
-          setDirections(result);
-        }
-      }
-    );
-  };
+  const onLoad = useCallback((map: any) => (mapRef.current = map), []);
 
   return (
-    <div className="container h-full">
+    <div className="h-full">
       <div className="map h-full">
         <GoogleMap
           zoom={10}
@@ -119,16 +97,4 @@ const farOptions = {
   fillOpacity: 0.05,
   strokeColor: "#FF5252",
   fillColor: "#FF5252",
-};
-
-const generateHouses = (position: LatLngLiteral) => {
-  const _houses: Array<LatLngLiteral> = [];
-  for (let i = 0; i < 100; i++) {
-    const direction = Math.random() < 0.5 ? -2 : 2;
-    _houses.push({
-      lat: position.lat + Math.random() / direction,
-      lng: position.lng + Math.random() / direction,
-    });
-  }
-  return _houses;
 };

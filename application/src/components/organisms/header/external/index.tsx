@@ -4,9 +4,9 @@ import { HeaderLink } from "../../../molecules/headerLink";
 import { StyledLink } from "../../../atoms/Link";
 import CtasRender from "../../../molecules/ctas";
 
-const ExternalHeader = () => {
+const ExternalHeader = ({ ...props }) => {
   return (
-    <Header>
+    <Header {...props}>
       <Container>
         <Nav>
           <StyledLink href="/" style={{ gridArea: "logo" }}>
@@ -14,9 +14,9 @@ const ExternalHeader = () => {
           </StyledLink>
           <CtasRender />
           <Menu>
-            <HeaderLink href="/login">Home</HeaderLink>
-            <HeaderLink href="/login">Mapa interativo</HeaderLink>
-            <HeaderLink href="/login">Fale conosco</HeaderLink>
+            <HeaderLink href="/">Home</HeaderLink>
+            <HeaderLink href="/map">Mapa interativo</HeaderLink>
+            <HeaderLink href="/adm/chat">Fale conosco</HeaderLink>
           </Menu>
         </Nav>
       </Container>
